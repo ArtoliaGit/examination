@@ -3,7 +3,7 @@
     <div class="close-con">
       <el-dropdown @command="handleTagsOption" style="height: 100%;">
         <el-button size="small" type="text" style="height: 100%;">
-          <i style="font-size: 18px" class="el-icon-circle-close-outline" />
+          <i style="font-size: 18px" class="el-icon-circle-close" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item
