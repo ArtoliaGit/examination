@@ -10,8 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         bat 'mvn -f ./examination-server/pom.xml clean package -P prod'
-        bat 'path'
-        bat 'java -jar ./examination-server/target/examination-0.0.1-SNAPSHOT.jar'
+        bat 'npm run build --prefix ./examination-admin'
       }
     }
   }
