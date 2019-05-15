@@ -5,7 +5,7 @@ import
   getMenuByRouter,
   getBreadCrumbList,
   getHomeRoute,
-  // getTagNavListFromLocalstorage,
+  getTagNavListFromLocalstorage,
   setTagNavListInLocalstorage,
   routeEqual,
   getNextRoute,
@@ -38,11 +38,12 @@ export default {
     },
     setTagNavList(state, list) {
       let tagList = [];
+      debugger;
       if (list) {
         tagList = [...list];
       } else {
-        // tagList = getTagNavListFromLocalstorage() || [];
-        tagList = [];
+        tagList = getTagNavListFromLocalstorage() || [];
+        // tagList = [];
       }
       if (tagList[0] && tagList[0].name !== homeName) tagList.shift();
       const homeTagIndex = tagList.findIndex(item => item.name === homeName);

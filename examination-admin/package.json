@@ -12,24 +12,24 @@
   "dependencies": {
     "axios": "^0.18.0",
     "echarts": "^4.2.1",
-    "element-ui": "^2.7.2",
+    "element-ui": "^2.8.2",
     "js-cookie": "^2.2.0",
     "nprogress": "^0.2.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.6",
-    "vuex": "^3.0.1"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.6.0",
-    "@vue/cli-plugin-eslint": "^3.6.0",
-    "@vue/cli-service": "^3.6.0",
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
     "@vue/eslint-config-airbnb": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "compression-webpack-plugin": "^2.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "lint-staged": "^8.1.4",
-    "node-sass": "^4.9.0",
+    "lint-staged": "^8.1.7",
+    "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.21"
   },

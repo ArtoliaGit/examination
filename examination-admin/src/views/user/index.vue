@@ -30,6 +30,7 @@
           highlight-current-row
           fit
           :max-height="maxHeight"
+          :height="maxHeight"
           style="width: 100%"
           header-row-class-name="table-header"
           v-loading="tableLoading"
