@@ -1,0 +1,108 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.main {
+  @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  .sidebar-container {
+    height: 100%;
+    width: auto!important;
+    overflow: hidden;
+    .el-scrollbar {
+      height: 100%;
+    }
+    .el-menu--collapse {
+      width: 60px;
+    }
+    .el-menu-vertical-custom:not(.el-menu--collapse) {
+      width: 250px;
+    }
+    .scrollbar-wrapper {
+      overflow-x: hidden!important;
+      .el-scrollbar__view {
+        height: 100%;
+      }
+    }
+    .el-scrollbar__bar.is-vertical{
+      right: 0px;
+    }
+    .is-horizontal {
+      display: none;
+    }
+    a {
+      display: inline-block;
+      width: 100%;
+      overflow: hidden;
+    }
+    .svg-icon {
+      margin-right: 16px;
+    }
+    .el-menu {
+      border: none;
+      height: 100%;
+    }
+    .is-active > .el-submenu__title {
+        color: #f4f4f5!important;
+    }
+    .tag-nav-wrapper{
+      padding: 0;
+      height:40px;
+      background:#F0F0F0;
+    }
+  }
+  .main-container {
+    min-height: 100%;
+    transition: margin-left .28s;
+    position: relative;
+    .el-header {
+      height: 60px;
+      .header-bar {
+        width: 100%;
+        height: 100%;
+      }
+      .side-trigger {
+        float: left;
+        line-height: 60px;
+        i {
+          font-size: 24px;
+          cursor: pointer;
+          transition: all 0.28s ease;
+        }
+      }
+      .custom-bread-crumb {
+        line-height: 60px;
+        margin-left: 40px;
+        display: inline-block;
+      }
+      .right-menu {
+        float: right;
+        height: 60px;
+        line-height: 60px;
+      }
+    }
+    .tag-nav-wrapper {
+      height: 100%;
+    }
+    .el-main {
+      padding: 0;
+      .show-content {
+        padding: 10px;
+      }
+    }
+  }
+}
+
+.el-menu span {
+  margin-left: 10px;
+}
+
+.el-table th {
+  background-color: #f5f7fa!important;
+}
