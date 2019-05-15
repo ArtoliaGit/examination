@@ -9,10 +9,9 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-      	bat 'cd examination-server'
-        bat 'mvn clean package -P prod'
+        bat 'mvn -f ./examination-server/pom.xml clean package -P prod'
         bat 'path'
-        bat 'java -jar ./target/examination-0.0.1-SNAPSHOT.jar'
+        bat 'java -jar ./examination-server/target/examination-0.0.1-SNAPSHOT.jar'
       }
     }
   }
