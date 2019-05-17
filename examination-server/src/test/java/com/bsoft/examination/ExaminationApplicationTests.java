@@ -1,6 +1,8 @@
 package com.bsoft.examination;
 
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.bsoft.examination.domain.datasource.DataSourceEntity;
+import com.bsoft.examination.service.datasource.DataSourceService;
 import com.bsoft.examination.service.test.TestService;
 import com.bsoft.examination.util.WordUtil;
 import com.bsoft.examination.util.excel.ExcelStyleHandler;
@@ -114,10 +116,24 @@ public class ExaminationApplicationTests {
     @Autowired
     private TestService testService;
 
+    @Autowired
+    private DataSourceService dataSourceService;
+
     @Test
     public void testDs() {
-        testService.test();
+//        testService.test();
 //        testService.getUser();
+        DataSourceEntity dataSourceEntity = new DataSourceEntity();
+        dataSourceEntity.setDatasourceName("bs_tjxt");
+        dataSourceEntity.setDatasourceDriverclass("2");
+        dataSourceEntity.setDatasourceIp("192.168.1.201");
+        dataSourceEntity.setDatasourcePort("1433");
+        dataSourceEntity.setDatasourceUser("sa");
+        dataSourceEntity.setDatasourcePassword("bsoft");
+        dataSourceEntity.setType("2");
+        dataSourceEntity.setOrgancode("azsqwsfwzx");
+        dataSourceService.addDataSource(dataSourceEntity);
+        dataSourceService.removeDataSource("bs_tjxt");
     }
 
     public List<DemoInfo> getList() {

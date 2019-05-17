@@ -127,7 +127,7 @@ public class CustomDynamicDataSourceProvider extends YmlDynamicDataSourceProvide
         return dataSourcePropertyMap;
     }
 
-    private Map<String, String> getUrl(String driverType, String ip, String port, String name) {
+    public Map<String, String> getUrl(String driverType, String ip, String port, String name) {
         String driverClass = "";
         String url = "";
 
