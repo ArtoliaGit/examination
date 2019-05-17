@@ -2,10 +2,12 @@ package com.bsoft.examination.web;
 
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.bsoft.examination.domain.ExcelDemo;
+import com.bsoft.examination.service.test.TestService;
 import com.bsoft.examination.util.WordUtil;
 import com.bsoft.examination.util.excel.ExcelStyleHandler;
 import com.bsoft.examination.util.excel.ExcelUtil;
 import com.bsoft.examination.util.excel.ExcelWriterFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,9 @@ import java.util.*;
 @RestController
 @RequestMapping("file")
 public class FileController {
+
+    @Autowired
+    private TestService testService;
 
     @PostMapping
     public String upload(MultipartFile file) throws Exception {

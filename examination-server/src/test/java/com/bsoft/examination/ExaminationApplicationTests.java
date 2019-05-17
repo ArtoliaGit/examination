@@ -1,6 +1,7 @@
 package com.bsoft.examination;
 
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.bsoft.examination.service.test.TestService;
 import com.bsoft.examination.util.WordUtil;
 import com.bsoft.examination.util.excel.ExcelStyleHandler;
 import com.bsoft.examination.util.excel.ExcelUtil;
@@ -108,6 +109,15 @@ public class ExaminationApplicationTests {
 //		String fileName = "导出word.doc";
 
         WordUtil.createWord(dataMap, "freemarker模板.ftl", fileOnlyName);
+    }
+
+    @Autowired
+    private TestService testService;
+
+    @Test
+    public void testDs() {
+        testService.test();
+//        testService.getUser();
     }
 
     public List<DemoInfo> getList() {
