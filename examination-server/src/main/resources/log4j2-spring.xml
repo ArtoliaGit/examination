@@ -45,17 +45,10 @@
         </RollingRandomAccessFile>
     </Appenders>
     <Loggers>
-        <Logger name="org.apache.catalina.startup.DigesterFactory" level="error" />
-        <Logger name="org.apache.catalina.util.LifecycleBase" level="error" />
-        <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="warn" />
-        <Logger name="org.apache.sshd.common.util.SecurityUtils" level="warn"/>
-        <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="warn" />
-        <Logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="error" />
-        <Logger name="org.hibernate.validator.internal.util.Version" level="warn" />
-        <Logger name="org.springframework.boot.actuate.endpoint.jmx" level="warn"/>
-        <Logger name="org.springframework.web" level="debug"/>
-        <Logger name="org.springframework.boot" level="info"/>
+        <Logger name="org.springframework.web" level="warn"/>
+        <Logger name="org.springframework.boot" level="warn"/>
         <Logger name="org.mybatis" level="info"/>
+        <Logger name="com.bsoft.examination" level="debug" />
         <AsyncRoot level="debug">
             <AppenderRef ref="Console" />
             <AppenderRef ref="errorLog" />
