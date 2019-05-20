@@ -70,7 +70,7 @@ public class FileController {
         dataMap.put("content", "这是正文");
 
         try {
-            FileInputStream fis = new FileInputStream(new File("D:\\下载\\33.jpg"));
+            FileInputStream fis = new FileInputStream(new File("D:\\下载\\33.png"));
             byte[] data = new byte[fis.available()];
             fis.read(data);
             fis.close();

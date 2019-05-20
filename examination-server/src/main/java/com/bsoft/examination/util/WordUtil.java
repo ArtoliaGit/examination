@@ -25,7 +25,7 @@ public class WordUtil {
         try {
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
             configuration.setDefaultEncoding("UTF-8");
-            configuration.setClassForTemplateLoading(WordUtil.class, "/templates");
+            configuration.setClassForTemplateLoading(WordUtil.class, "/templates/");
             Template template = configuration.getTemplate(templateName);
             File outFile = new File("D:/temp" + File.separator + fileName);
             if (!outFile.getParentFile().exists()) {
@@ -59,7 +59,7 @@ public class WordUtil {
         try {
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_28);
             configuration.setDefaultEncoding("UTF-8");
-            configuration.setClassForTemplateLoading(WordUtil.class, "/templates");
+            configuration.setClassForTemplateLoading(WordUtil.class, "/templates/");
             Template template = configuration.getTemplate(templateName);
             fileName = new String(fileName.getBytes(), "ISO-8859-1");
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
