@@ -6,10 +6,10 @@ spring:
     dynamic:
       datasource:
         master:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/blog?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
-          username: root
-          password: artolia
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://192.168.1.201:1433; DatabaseName=bs_yjyy
+          username: sa
+          password: bsoft
 #        db1:
 #          driver-class-name: com.mysql.cj.jdbc.Driver
 #          url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai

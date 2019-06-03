@@ -6,7 +6,8 @@ import com.bsoft.examination.common.HttpStatus;
 import com.bsoft.examination.common.Result;
 import com.bsoft.examination.common.auth.UserInfo;
 import com.bsoft.examination.domain.auth.User;
-import com.bsoft.examination.mapper.user.UserMapper;
+import com.bsoft.examination.mapper.auth.UserMapper;
+import com.bsoft.examination.util.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 用户业务类
+ * @author artolia
+ */
 @Service("userService")
 public class UserService implements UserDetailsService {
 
@@ -53,16 +58,21 @@ public class UserService implements UserDetailsService {
         return result;
     }
 
+    /**
+     * 获取用户列表
+     * @param params 参数
+     * @return Result
+     */
     public Result getUserList(Map<String, Object> params) {
         Result<List<User>> result = new Result<>();
 
         try {
             String pageNum = (String) params.get("page");
             String pageSize = (String) params.get("pageSize");
-            Page<User> page = new Page<User>(1, 10);
+            Page<User> page = new Page<>(1, 10);
 
             if (StringUtils.isNoneBlank(pageNum, pageNum)) {
-                page.setPages(Long.parseLong(pageNum));
+                page.setCurrent(Long.parseLong(pageNum));
                 page.setSize(Long.parseLong(pageSize));
             }
 
@@ -83,6 +93,12 @@ public class UserService implements UserDetailsService {
         return result;
     }
 
+    /**
+     * 保存或者更新用户
+     * @param user 用户实体
+     * @param op 操作
+     * @return Result
+     */
     public Result save(User user, String op) {
         Result<User> result = new Result<>();
         try {
@@ -98,6 +114,7 @@ public class UserService implements UserDetailsService {
                 final String password = user.getPassword();
                 user.setPassword(encoder.encode(password));
                 user.setCreateUser(userInfo.getUsername());
+                user.setUserId(UUIDUtil.generateTimeUUID());
                 userMapper.save(user);
             } else {
                 userMapper.updateById(user);
@@ -114,7 +131,12 @@ public class UserService implements UserDetailsService {
         return result;
     }
 
-    public Result delete(int userId) {
+    /**
+     * 删除用户
+     * @param userId 用户id
+     * @return Result
+     */
+    public Result delete(String userId) {
         Result result = new Result();
 
         try {

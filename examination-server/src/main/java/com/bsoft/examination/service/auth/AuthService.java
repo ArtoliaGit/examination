@@ -13,6 +13,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 登录验证
+ * @author artolia
+ */
 @Service
 public class AuthService {
 
@@ -26,6 +30,12 @@ public class AuthService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    /**
+     * 登录
+     * @param username 用户名
+     * @param password 密码
+     * @return Result
+     */
     public Result login(String username, String password) {
         Result<String> result = new Result<>();
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);

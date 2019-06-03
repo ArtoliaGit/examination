@@ -7,21 +7,22 @@
     />
     <custom-bread-crumb class="custom-bread-crumb" :list="breadCrumbList" />
     <div class="right-menu">
-      <el-button type="primary" @click="handleLogout" size="mini">退出登陆</el-button>
+      <user />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import CustomBreadCrumb from './custom-bread-crumb';
 import SideTrigger from './side-trigger';
+import User from './user';
 
 export default {
   name: 'HeaderBar',
   components: {
     CustomBreadCrumb,
     SideTrigger,
+    User,
   },
   props: {
     isCollapse: {
@@ -35,14 +36,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions([
-      'handleLogout',
-    ]),
     handleCollapsedChange(state) {
       this.$emit('on-collapse', state);
-    },
-    logout() {
-      this.handleLogout();
     },
   },
 };

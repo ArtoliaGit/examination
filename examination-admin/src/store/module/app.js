@@ -38,7 +38,7 @@ export default {
     },
     setTagNavList(state, list) {
       let tagList = [];
-      debugger;
+      // debugger;
       if (list) {
         tagList = [...list];
       } else {

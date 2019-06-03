@@ -15,6 +15,10 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 动态数据源
+ * @author artolia
+ */
 @Slf4j
 @Configuration
 public class CustomDynamicDataSourceProvider extends YmlDynamicDataSourceProvider {
@@ -86,22 +90,22 @@ public class CustomDynamicDataSourceProvider extends YmlDynamicDataSourceProvide
      * @throws SQLException sql异常
      */
     private Map<String, DataSourceProperty> executeStmt(Statement statement) throws SQLException {
-        String sql = "select id, datasource_name, datasource_driverclass, datasource_ip, datasource_port," +
-                " datasource_user, datasource_password, organcode, type from datasource";
+        String sql = "select name, driverclass, ip, port," +
+                " username, password, organcode, type from organ";
         ResultSet result = statement.executeQuery(sql);
         if (result == null) {
             return null;
         }
         Map<String, DataSourceProperty> dataSourcePropertyMap = new HashMap<>();
         while (result.next()) {
-            String name = result.getString(2);
-            String driverType = result.getString(3);
-            String ip = result.getString(4);
-            String port = result.getString(5);
-            String user = result.getString(6);
-            String password = result.getString(7);
-            String organcode = result.getString(8);
-            String type = result.getString(9);
+            String name = result.getString(1);
+            String driverType = result.getString(2);
+            String ip = result.getString(3);
+            String port = result.getString(4);
+            String user = result.getString(5);
+            String password = result.getString(6);
+            String organcode = result.getString(7);
+            String type = result.getString(8);
 
             Map<String, String> map = getUrl(driverType, ip, port, name);
             String url = map.get("url");

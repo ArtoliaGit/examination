@@ -1,21 +1,20 @@
 <template>
   <div class="page">
     <el-card>
-      <el-row class="tabbar">
+      <el-row class="filter-container">
         <el-button
           type="primary"
           size="small"
-          class="btn"
+          class="filter-item"
           icon="el-icon-search"
           @click="handleSearch"
-          :loading="tableLoading"
         >
           查询
         </el-button>
         <el-button
           type="primary"
           size="small"
-          class="btn"
+          class="filter-item"
           icon="el-icon-plus"
           @click="handleAdd"
         >
@@ -32,12 +31,15 @@
           style="width: 100%"
           header-row-class-name="table-header"
           v-loading="tableLoading"
+          size="small"
           @row-dblclick="handleEdit"
         >
           <el-table-column label="角色名" prop="roleName" />
           <el-table-column label="角色描述" prop="roleDescription" />
-          <el-table-column label="创建日期" prop="createTime" />
-          <el-table-column label="操作" align="center">
+          <el-table-column label="维护人" prop="createUser" />
+          <el-table-column label="维护时间" prop="createTime" />
+          <el-table-column label="维护机构" prop="createUnit" />
+          <el-table-column label="操作" align="center" min-width="120">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
               <el-button
@@ -64,6 +66,7 @@
           :page-size="page.pageSize"
           :page-sizes="page.pageSizes"
           :total="page.total"
+          background
           layout="total, sizes, prev, pager, next, jumper, slot"
         >
           <el-button size="mini" icon="el-icon-refresh" @click="refresh" plain>刷新</el-button>
@@ -138,7 +141,7 @@ export default {
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      title: '新建角色',
+      title: '新建',
       dialogFormVisible: false,
       labelWidth: '120px',
       form: {
@@ -146,6 +149,8 @@ export default {
         roleName: '',
         roleDescription: '',
         createTime: '',
+        createUser: '',
+        createUnit: '',
         resource: '',
       },
       resourceFormVisible: false,
@@ -191,15 +196,18 @@ export default {
         roleName: val.roleName,
         roleDescription: val.roleDescription,
         createTime: val.createTime,
+        createUser: val.createUser,
+        createUnit: val.createUnit,
       };
       this.op = 'update';
-      this.title = '编辑角色';
+      this.title = '编辑';
       this.dialogFormVisible = true;
     },
     refresh() {
       this.getTableData();
     },
     handleSearch() {
+      this.page.page = 1;
       this.getTableData();
     },
     handleAdd() {
@@ -208,9 +216,12 @@ export default {
         roleName: '',
         roleDescription: '',
         createTime: '',
+        createUser: '',
+        createUnit: '',
+        resource: '',
       };
       this.op = 'create';
-      this.title = '新建角色';
+      this.title = '新建';
       this.dialogFormVisible = true;
     },
     handleCancel() {
@@ -218,18 +229,22 @@ export default {
       this.resourceFormVisible = false;
     },
     handleSave() {
-      save(this.form, { op: this.op }).then((res) => {
-        if (res.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '保存成功',
-          });
-          this.dialogFormVisible = false;
-          this.getTableData();
-        } else {
-          this.$message({
-            type: 'error',
-            message: '保存失败',
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          save(this.form, { op: this.op }).then((res) => {
+            if (res.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '保存成功',
+              });
+              this.handleCancel();
+              this.getTableData();
+            } else {
+              this.$message({
+                type: 'error',
+                message: '保存失败',
+              });
+            }
           });
         }
       });
@@ -300,18 +315,14 @@ export default {
   },
   mounted() {
     this.getTableData();
+    window.onresize = () => {
+      this.maxHeight = window.innerHeight - 260;
+    };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.tabbar {
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-.btn {
-  margin-left: 10px;
-}
 .el-pagination {
   margin-top: 10px;
   float: right;

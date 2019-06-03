@@ -3,6 +3,7 @@ package com.bsoft.examination.web;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.bsoft.examination.domain.ExcelDemo;
 import com.bsoft.examination.service.test.TestService;
+import com.bsoft.examination.util.RequestParamPaser;
 import com.bsoft.examination.util.WordUtil;
 import com.bsoft.examination.util.excel.ExcelStyleHandler;
 import com.bsoft.examination.util.excel.ExcelUtil;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,11 +50,11 @@ public class FileController {
     }
 
     @GetMapping("/excel")
-    public void downloadExcel(HttpServletResponse response) {
+    public void downloadExcel(HttpServletRequest request, HttpServletResponse response) {
         List<ExcelDemo> list = getList();
         String fileName = "一个 Excel 文件";
         String sheetName = "第一个 sheet";
-
+        Map<String, Object> params = RequestParamPaser.getParameters(request);
         ExcelWriterFactory writer = ExcelUtil.writeExcel(response, fileName, ExcelTypeEnum.XLS, new ExcelStyleHandler());
         writer.write(list, "测试", new ExcelDemo());
         writer.write(list, "测试2", new ExcelDemo());

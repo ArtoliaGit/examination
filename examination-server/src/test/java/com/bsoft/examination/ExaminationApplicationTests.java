@@ -1,8 +1,11 @@
 package com.bsoft.examination;
 
 import com.alibaba.excel.support.ExcelTypeEnum;
-import com.bsoft.examination.domain.datasource.DataSourceEntity;
-import com.bsoft.examination.service.datasource.DataSourceService;
+import com.bsoft.examination.domain.system.Notice;
+import com.bsoft.examination.domain.system.Organ;
+import com.bsoft.examination.mapper.system.NoticeMapper;
+import com.bsoft.examination.mapper.auth.UserMapper;
+import com.bsoft.examination.service.system.OrganService;
 import com.bsoft.examination.service.test.TestService;
 import com.bsoft.examination.util.WordUtil;
 import com.bsoft.examination.util.excel.ExcelStyleHandler;
@@ -117,23 +120,23 @@ public class ExaminationApplicationTests {
     private TestService testService;
 
     @Autowired
-    private DataSourceService dataSourceService;
+    private OrganService organService;
 
     @Test
     public void testDs() {
 //        testService.test();
 //        testService.getUser();
-        DataSourceEntity dataSourceEntity = new DataSourceEntity();
-        dataSourceEntity.setDatasourceName("bs_tjxt");
-        dataSourceEntity.setDatasourceDriverclass("2");
-        dataSourceEntity.setDatasourceIp("192.168.1.201");
-        dataSourceEntity.setDatasourcePort("1433");
-        dataSourceEntity.setDatasourceUser("sa");
-        dataSourceEntity.setDatasourcePassword("bsoft");
-        dataSourceEntity.setType("2");
-        dataSourceEntity.setOrgancode("azsqwsfwzx");
-        dataSourceService.addDataSource(dataSourceEntity);
-        dataSourceService.removeDataSource("bs_tjxt");
+        Organ organ = new Organ();
+        organ.setName("bs_tjxt");
+        organ.setDriverclass("1");
+        organ.setIp("192.168.1.201");
+        organ.setPort("1433");
+        organ.setUsername("sa");
+        organ.setPassword("bsoft");
+        organ.setType("1");
+        organ.setOrgancode("azsqwsfwzx");
+        organService.addDataSource(organ);
+        organService.removeDataSource(organ);
     }
 
     public List<DemoInfo> getList() {
@@ -152,5 +155,21 @@ public class ExaminationApplicationTests {
         list.add(model2);
         return list;
     }
+
+    @Autowired
+    private NoticeMapper noticeMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Test
+    public void testNotice() {
+        Notice notice = new Notice();
+        notice.setCheckItem("123");
+        noticeMapper.insert(notice);
+
+        userMapper.deleteById("ccb95bf9806611e9971c844bf5225f31");
+    }
+
 
 }

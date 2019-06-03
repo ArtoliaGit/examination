@@ -19,6 +19,9 @@ module.exports = {
     'import/extensions': 'off',
     'no-param-reassign': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'consistent-return': 'off',
+    'max-len': 'off',
+    'no-unused-vars': 'off',
   },
 
   parserOptions: {

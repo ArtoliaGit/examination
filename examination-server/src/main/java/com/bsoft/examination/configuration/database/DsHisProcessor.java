@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
+/**
+ * 数据源适配
+ * @author artolia
+ */
 @Slf4j
 @Component
 public class DsHisProcessor extends DsProcessor {

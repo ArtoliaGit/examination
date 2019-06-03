@@ -3,13 +3,13 @@ package com.bsoft.examination;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Artolia Pendragon
  * @version 1.0.0
- * @Description TODO
- * @createTime 2019年05月11日 21:57:00
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class DemoInfo extends BaseRowModel {
     @ExcelProperty(value = "姓名" ,index = 0)

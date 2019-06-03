@@ -1,22 +1,28 @@
 <template>
   <div class="page">
     <el-card>
-      <el-row class="tabbar">
-        <el-input placeholder="用户名" v-model="query.username" size="small" style="width: 100px;" />
+      <el-row class="filter-container">
+        <el-input
+          placeholder="用户名"
+          v-model="query.username"
+          size="small"
+          style="width: 100px;"
+          class="filter-item"
+        />
         <el-button
           type="primary"
           size="small"
-          class="btn"
+          class="filter-item"
           icon="el-icon-search"
+          style="margin-left: 10px;"
           @click="handleSearch"
-          :loading="tableLoading"
         >
           查询
         </el-button>
         <el-button
           type="primary"
           size="small"
-          class="btn"
+          class="filter-item"
           icon="el-icon-plus"
           @click="handleAdd"
         >
@@ -34,17 +40,16 @@
           style="width: 100%"
           header-row-class-name="table-header"
           v-loading="tableLoading"
+          size="small"
           @row-dblclick="handleEdit"
         >
           <el-table-column label="用户名" prop="username" sortable />
-          <el-table-column label="姓名" prop="personName" sortable />
-          <el-table-column label="状态" prop="status" sortable>
-            <template slot-scope="scope">
-              {{ statusDic[scope.row.status] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="创建日期" prop="createTime" sortable />
-          <el-table-column label="创建人" prop="createUser" sortable />
+          <el-table-column label="所属机构" prop="organcode" sortable />
+          <el-table-column label="机构类型" prop="organtype" sortable />
+          <el-table-column label="状态" prop="status" :formatter="getStatusDic" sortable />
+          <el-table-column label="维护人" prop="createUser" sortable />
+          <el-table-column label="维护时间" prop="createTime" sortable />
+          <el-table-column label="维护机构" prop="createUnit" sortable />
           <el-table-column label="操作" align="center" width="200">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
@@ -65,6 +70,7 @@
           :page-size="page.pageSize"
           :page-sizes="page.pageSizes"
           :total="page.total"
+          background
           layout="total, sizes, prev, pager, next, jumper, slot"
         >
           <el-button size="mini" icon="el-icon-refresh" @click="refresh" plain>刷新</el-button>
@@ -88,6 +94,12 @@
         </el-form-item>
         <el-form-item label="密码" prop="password" :label-width="labelWidth" v-if="op === 'create'">
           <el-input v-model="form.password" type="password" style="width: 50%;" />
+        </el-form-item>
+        <el-form-item label="所属机构" prop="organcode" :label-width="labelWidth">
+          <el-input v-model="form.organcode" type="organcode" style="width: 50%;" />
+        </el-form-item>
+        <el-form-item label="机构类型" prop="organtype" :label-width="labelWidth">
+          <el-input v-model="form.organtype" type="organtype" style="width: 50%;" />
         </el-form-item>
         <el-form-item label="角色" prop="roles" :label-width="labelWidth">
           <el-select v-model="form.roles" multiple style="width: 50%;">
@@ -123,10 +135,10 @@ export default {
   data() {
     return {
       tableData: [],
-      statusDic: {
-        0: '禁用',
-        1: '正常',
-      },
+      statusDic: [
+        { key: '0', text: '禁用' },
+        { key: '1', text: '正常' },
+      ],
       page: {
         page: 1,
         pageSize: 10,
@@ -138,7 +150,8 @@ export default {
         userId: '',
         username: '',
         password: '',
-        personName: '',
+        organcode: '',
+        organtype: '',
         roles: [],
       },
       dialogFormVisible: false,
@@ -148,7 +161,7 @@ export default {
         password: [{ required: true, message: '不能为空', trigger: 'change' }],
       },
       op: 'create',
-      title: '新建用户',
+      title: '新建',
       query: {
         username: '',
       },
@@ -183,37 +196,44 @@ export default {
       });
     },
     handleSearch() {
+      this.page.page = 1;
       this.getTableData();
     },
     handleAdd() {
+      this.op = 'create';
+      this.title = '新增';
+      this.dialogFormVisible = true;
       this.form = {
         userId: '',
         username: '',
         password: '',
-        personName: '',
+        organcode: '',
+        organtype: '',
         roles: [],
       };
-      this.op = 'create';
-      this.title = '新增用户';
-      this.dialogFormVisible = true;
     },
     handleSave() {
       const data = this.form;
+      data.status = '1';
       data.roles = this.form.roles.map(item => ({ roleId: item }));
-      save(data, { op: this.op }).then((res) => {
-        if (res.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '保存成功',
-          });
-          this.getTableData();
-        } else {
-          this.$message({
-            type: 'error',
-            message: '保存失败',
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          save(data, { op: this.op }).then((res) => {
+            if (res.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '保存成功',
+              });
+              this.getTableData();
+              this.handleCancel();
+            } else {
+              this.$message({
+                type: 'error',
+                message: '保存失败',
+              });
+            }
           });
         }
-        this.dialogFormVisible = false;
       });
     },
     handleCancel() {
@@ -222,11 +242,12 @@ export default {
     handleEdit(val) {
       this.form.userId = val.userId;
       this.form.username = val.username;
-      this.form.personName = val.personName;
       this.form.password = val.password;
+      this.form.organcode = val.organcode;
+      this.form.organtype = val.organtype;
       this.form.roles = val.roles.map(item => item.roleId);
       this.op = 'update';
-      this.title = '修改用户';
+      this.title = '修改';
       this.dialogFormVisible = true;
     },
     handleDelete(id) {
@@ -254,10 +275,20 @@ export default {
         }
       });
     },
+    getStatusDic(row, column, cellValue, index) {
+      const result = this.statusDic.filter(item => cellValue === item.key);
+      if (result.length > 0) {
+        return result[0].text;
+      }
+      return '';
+    },
   },
   mounted() {
     this.getTableData();
     this.getRoleDic();
+    window.onresize = () => {
+      this.maxHeight = window.innerHeight - 260;
+    };
   },
 };
 </script>

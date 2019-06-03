@@ -10,7 +10,7 @@
           @on-collapse="handleCollapse"
         />
       </el-header>
-      <el-container style="overflow: auto;">
+      <el-container style="overflow: hide;">
         <el-header height="40px" style="padding: 0;">
           <div class="tag-nav-wrapper">
             <tags-nav
@@ -22,7 +22,11 @@
           </div>
         </el-header>
         <el-main>
-          <router-view class="show-content" />
+          <transition name="fade-transform" mode="out-in">
+            <keep-alive :include="cacheList">
+              <router-view class="show-content" />
+            </keep-alive>
+          </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -56,6 +60,17 @@ export default {
     },
     tagNavList() {
       return this.$store.state.app.tagNavList;
+    },
+    cacheList() {
+      const list = [
+        'ParentView',
+        ...(this.tagNavList.length
+          ? this.tagNavList
+            .filter(item => !(item.meta && item.meta.notCache))
+            .map(item => item.name)
+          : []),
+      ];
+      return list;
     },
   },
   methods: {

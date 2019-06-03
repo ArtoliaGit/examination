@@ -7,7 +7,8 @@ import com.bsoft.examination.common.HttpStatus;
 import com.bsoft.examination.common.Result;
 import com.bsoft.examination.common.auth.UserInfo;
 import com.bsoft.examination.domain.auth.Role;
-import com.bsoft.examination.mapper.role.RoleMapper;
+import com.bsoft.examination.mapper.auth.RoleMapper;
+import com.bsoft.examination.util.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 角色业务类
  * @author Artolia Pendragon
  * @version 1.0.0
- * @Description TODO
- * @createTime 2019年04月21日 13:20:00
  */
 @Service
 public class RoleService {
@@ -31,15 +31,20 @@ public class RoleService {
     @Autowired
     private UserInfo userInfo;
 
+    /**
+     * 获取角色列表
+     * @param params 参数
+     * @return Result
+     */
     public Result getRoleList(Map<String, Object> params) {
         Result<List<Role>> result = new Result<>();
         try {
             String pageNum = (String) params.get("page");
             String pageSize = (String) params.get("pageSize");
-            Page<Role> page = new Page<Role>(1, 10);
+            Page<Role> page = new Page<>(1, 10);
 
             if (StringUtils.isNoneBlank(pageNum, pageNum)) {
-                page.setPages(Long.parseLong(pageNum));
+                page.setCurrent(Long.parseLong(pageNum));
                 page.setSize(Long.parseLong(pageSize));
             }
             IPage<Role> roleIPage = roleMapper.getRoleList(page);
@@ -57,6 +62,12 @@ public class RoleService {
         return result;
     }
 
+    /**
+     * 保存或更新
+     * @param role 角色实体
+     * @param op 操作
+     * @return Result
+     */
     public Result save(Role role, String op) {
         Result<Role> result = new Result<>();
 
@@ -71,6 +82,7 @@ public class RoleService {
                     return result;
                 }
                 role.setCreateUser(userInfo.getUsername());
+                role.setRoleId(UUIDUtil.generateTimeUUID());
                 roleMapper.save(role);
                 result.setCode(HttpStatus.OK);
                 result.setMessage("保存成功");
@@ -88,7 +100,12 @@ public class RoleService {
         return result;
     }
 
-    public Result getRolesByUser(int userId) {
+    /**
+     * 根据用户id获取角色
+     * @param userId 用户id
+     * @return Result
+     */
+    public Result getRolesByUser(String userId) {
         Result<List<Role>> result = new Result<>();
 
         try {
@@ -104,7 +121,12 @@ public class RoleService {
         return result;
     }
 
-    public Result delete(int roleId) {
+    /**
+     * 删除角色
+     * @param roleId 角色id
+     * @return Result
+     */
+    public Result delete(String roleId) {
         Result result = new Result();
 
         try {
@@ -119,6 +141,11 @@ public class RoleService {
         return result;
     }
 
+    /**
+     * 保存角色菜单配置
+     * @param role 角色实体
+     * @return Result
+     */
     public Result saveResource(Role role) {
         Result result = new Result();
 

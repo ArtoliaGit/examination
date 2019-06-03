@@ -51,6 +51,90 @@ export default [
     ],
   },
   {
+    path: '/examination',
+    name: 'Examination',
+    meta: {
+      access: [config.super_role],
+      icon: 'fa fa-cog',
+      title: '预约',
+    },
+    component: Main,
+    children: [
+      {
+        path: 'reservation',
+        name: 'Reservation',
+        meta: {
+          access: [config.super_role],
+          icon: 'fa fa-cog',
+          title: '医技预约',
+        },
+        component: () => import('@/views/reservation'),
+      },
+    ],
+  },
+  {
+    path: '/resource',
+    name: 'Resource',
+    meta: {
+      access: [config.super_role],
+      icon: 'fa fa-cog',
+      title: '资源',
+    },
+    component: Main,
+    children: [
+      {
+        path: 'checkItem',
+        name: 'CheckItem',
+        meta: {
+          icon: 'fa fa-cog',
+          title: '检查项目',
+          access: [config.super_role],
+        },
+        component: () => import('@/views/checkItem'),
+      },
+      {
+        path: 'limb',
+        name: 'Limb',
+        meta: {
+          icon: 'fa fa-cog',
+          title: '检查部位',
+          access: [config.super_role],
+        },
+        component: () => import('@/views/limb'),
+      },
+      {
+        path: 'reserveTime',
+        name: 'ReserveTime',
+        meta: {
+          icon: 'fa fa-cog',
+          title: '预约时段维护',
+          access: [config.super_role],
+        },
+        component: () => import('@/views/reserveTime'),
+      },
+      {
+        path: 'reserveTemplate',
+        name: 'ReserveTemplate',
+        meta: {
+          icon: 'fa fa-cog',
+          title: '预约资源模板',
+          access: [config.super_role],
+        },
+        component: () => import('@/views/reserveTemplate'),
+      },
+      {
+        path: 'reserveResource',
+        name: 'ReserveResource',
+        meta: {
+          icon: 'fa fa-cog',
+          title: '预约资源',
+          access: [config.super_role],
+        },
+        component: () => import('@/views/reserveResource'),
+      },
+    ],
+  },
+  {
     path: '/systemConfig',
     name: 'SystemConfig',
     meta: {
@@ -80,99 +164,35 @@ export default [
         },
         component: () => import('@/views/role'),
       },
-    ],
-  },
-  {
-    path: '/examination',
-    name: 'Examination',
-    meta: {
-      access: [config.super_role],
-      icon: 'fa fa-cog',
-      title: '预约',
-    },
-    component: Main,
-    children: [
       {
-        path: 'reservation',
-        name: 'Reservation',
+        path: 'organ',
+        name: 'Organ',
         meta: {
           access: [config.super_role],
-          icon: 'fa fa-cog',
-          title: '医技预约',
+          icon: 'iconfont icon-role',
+          title: '机构管理',
         },
-        component: () => import('@/views/reservation'),
-      },
-    ],
-  },
-  {
-    path: '/components',
-    name: 'components',
-    meta: {
-      access: [config.super_role],
-      icon: 'fa fa-cog',
-      title: '组件',
-    },
-    component: Main,
-    children: [
-      {
-        path: 'message_page',
-        name: 'message_page',
-        meta: {
-          icon: 'fa fa-cog',
-          title: '消息中心',
-          access: [config.super_role],
-        },
-        children: [
-          {
-            path: 'message_page1',
-            name: 'message_page1',
-            meta: {
-              access: [config.super_role],
-              icon: 'fa fa-cog',
-              title: '消息中心1',
-            },
-            component: () => import('@/views/About'),
-          },
-          {
-            path: 'message_page2',
-            name: 'message_page2',
-            meta: {
-              icon: 'fa fa-cog',
-              title: '消息中心2',
-              access: [config.super_role],
-            },
-            children: [
-              {
-                path: 'message_page3',
-                name: 'message_page3',
-                meta: {
-                  icon: 'fa fa-file-text-o',
-                  title: '消息中心3',
-                  access: [config.super_role],
-                },
-              },
-              {
-                path: 'message_page4',
-                name: 'message_page4',
-                meta: {
-                  icon: 'fa fa-file-text-o',
-                  title: '消息中心4',
-                  access: [config.super_role],
-                },
-              },
-            ],
-          },
-        ],
+        component: () => import('@/views/organ'),
       },
       {
-        path: 'about',
-        name: 'about',
+        path: 'notice',
+        name: 'Notice',
         meta: {
           access: [config.super_role],
-          icon: 'fa fa-cog',
-          title: '关于',
+          icon: 'iconfont icon-role',
+          title: '提示信息维护',
         },
-        component: () => import('@/views/Home'),
+        component: () => import('@/views/notice'),
+      },
+      {
+        path: 'reserveSetting',
+        name: 'ReserveSetting',
+        meta: {
+          access: [config.super_role],
+          icon: 'iconfont icon-role',
+          title: '预约设置',
+        },
+        component: () => import('@/views/reserveSetting'),
       },
     ],
   },

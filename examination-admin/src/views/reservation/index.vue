@@ -35,7 +35,9 @@
                 <div style="flex: 1;">2018.5.6</div>
                 <div style="flex: 1;">00192734</div>
               </div>
-              <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;">
+              <div
+                style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"
+              >
                 <div style="display: flex; grid-column: 1/3; align-items: center;">
                   <div style="flex: 1">姓名</div>
                   <div style="flex: 1">刘世丽</div>
@@ -66,7 +68,9 @@
                 <div style="flex: 1;">2018.5.6</div>
                 <div style="flex: 1;">00192734</div>
               </div>
-              <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;">
+              <div
+                style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"
+              >
                 <div style="display: flex; grid-column: 1/3; align-items: center;">
                   <div style="flex: 1">姓名</div>
                   <div style="flex: 1">刘世丽</div>
@@ -97,7 +101,9 @@
                 <div style="flex: 1;">2018.5.6</div>
                 <div style="flex: 1;">00192734</div>
               </div>
-              <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;">
+              <div
+                style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"
+              >
                 <div style="display: flex; grid-column: 1/3; align-items: center;">
                   <div style="flex: 1">姓名</div>
                   <div style="flex: 1">刘世丽</div>
@@ -152,14 +158,22 @@
           <div style="font-weight: bold;">预约时间</div>
           <div style="padding: 5px; margin-right: 50px;">
             <div style="display: grid; grid-template-columns: repeat(14, 1fr); grid-gap: 10px;">
-              <div v-for="item in 30" :key="item" style="width: 40px; height: 40px; background-color: green; border-radius: 5px;" />
+              <div
+                v-for="item in 30"
+                :key="item"
+                style="width: 40px; height: 40px; background-color: green; border-radius: 5px;"
+              />
             </div>
           </div>
         </div>
         <div>
           <div style="font-weight: bold;">预约时段</div>
           <div style="display: grid; grid-template-columns: repeat(7, 1fr); grid-gap: 10px;">
-            <div v-for="item in 9" :key="item" style="width: 80px; height: 80px; background-color: #2cdaca; border-radius: 5px; padding: 5px;">
+            <div
+              v-for="item in 9"
+              :key="item"
+              style="width: 80px; height: 80px; background-color: #2cdaca; border-radius: 5px; padding: 5px;"
+            >
               <div>5.7</div>
               <div>8:00-9:00</div>
               <div>B超1</div>
@@ -180,9 +194,7 @@ export default {
       type: 1,
     };
   },
-  methods: {
-
-  },
+  methods: {},
 };
 </script>
 
