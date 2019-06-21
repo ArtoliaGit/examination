@@ -3,7 +3,6 @@ package com.bsoft.examination.web.auth;
 import com.bsoft.examination.domain.auth.User;
 import com.bsoft.examination.service.auth.UserService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +17,11 @@ import java.util.Map;
 @RequestMapping("user")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 获取用户信息

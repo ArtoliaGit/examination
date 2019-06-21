@@ -119,7 +119,7 @@ export default {
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
       labelWidth: '120px',
       title: '新建',
       dialogFormVisible: false,
@@ -128,9 +128,9 @@ export default {
         cid: '',
         name: '',
         num: '',
-        createUser: '',
+        createUser: this.$store.state.user.username,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       },
       rules: {
         name: [{ required: true, message: '不能为空', trigger: 'blur' }],
@@ -191,9 +191,9 @@ export default {
         cid: '',
         name: '',
         num: '',
-        createUser: '',
+        createUser: this.$store.state.user.userName,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       };
     },
     handleAdd() {
@@ -256,7 +256,7 @@ export default {
       });
     },
     getCheckItems() {
-      getAllList().then((res) => {
+      getAllList({ way: '2' }).then((res) => {
         if (res.code === 200) {
           const { data } = res;
           if (data.length > 0) {
@@ -277,7 +277,7 @@ export default {
     this.getCheckItems();
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

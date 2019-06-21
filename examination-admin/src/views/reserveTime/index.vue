@@ -25,7 +25,9 @@
           size="small"
           @row-dblclick="handleEdit"
         >
-          <el-table-column label="预约时段" prop="timeSlot" />
+          <el-table-column label="开始时间" prop="startTime" />
+          <el-table-column label="结束时间" prop="endTime" />
+          <el-table-column label="预约时段序列" prop="timeSequence" />
           <el-table-column label="操作" align="center" min-width="120" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
@@ -64,8 +66,37 @@
       <el-form :model="form" ref="form" size="small" :rules="rules">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="预约时段" prop="timeSlot" :label-width="labelWidth">
-              <el-input type="string" v-model="form.timeSlot" />
+            <el-form-item label="开始时间" prop="startTime" :label-width="labelWidth">
+              <el-time-picker
+                v-model="form.startTime"
+                style="width: 100%;"
+                format="HH:mm"
+                value-format="HH:mm"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="结束时间" prop="endTime" :label-width="labelWidth">
+              <el-time-picker
+                v-model="form.endTime"
+                style="width: 100%;"
+                format="HH:mm"
+                value-format="HH:mm"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="预约时段序列" prop="timeSequence" :label-width="labelWidth">
+              <el-select v-model="form.timeSequence">
+                <el-option
+                  v-for="item in timeSequenceDic"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -97,20 +128,25 @@ export default {
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
       labelWidth: '120px',
       title: '新建',
       dialogFormVisible: false,
       form: {
         id: '',
-        timeSlot: '',
+        startTime: '',
+        endTime: '',
+        timeSequence: '',
         createUser: '',
         createTime: '',
         createUnit: '',
       },
       rules: {
-        timeSlot: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        startTime: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        endTime: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        timeSequence: [{ required: true, message: '不能为空', trigger: 'blur' }],
       },
+      timeSequenceDic: [],
     };
   },
   methods: {
@@ -146,7 +182,8 @@ export default {
       this.getTableData();
     },
     handleEdit(val) {
-      this.form = Object.assign({}, val);
+      this.resetForm();
+      this.form = Object.assign(this.form, val);
       this.op = 'update';
       this.title = '修改';
       this.dialogFormVisible = true;
@@ -157,10 +194,12 @@ export default {
     resetForm() {
       this.form = {
         id: '',
-        timeSlot: '',
-        createUser: '',
+        startTime: '',
+        endTime: '',
+        timeSequence: '',
+        createUser: this.$store.state.user.userName,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       };
     },
     handleAdd() {
@@ -222,11 +261,17 @@ export default {
         });
       });
     },
+    getTimeSequence() {
+      for (let i = 0; i < 26; i++) {
+        this.timeSequenceDic.push(String.fromCharCode(65 + i));
+      }
+    },
   },
   mounted() {
+    this.getTimeSequence();
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

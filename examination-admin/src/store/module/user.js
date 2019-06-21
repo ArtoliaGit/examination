@@ -14,6 +14,7 @@ export default {
   state: {
     userName: '',
     userId: '',
+    organ: '',
     avatorImgpath: '',
     token: getToken(),
     hasGetInfo: false,
@@ -47,6 +48,9 @@ export default {
     SET_RESOURCE(state, resource) {
       state.resource = resource;
     },
+    SET_ORGAN(state, organ) {
+      state.organ = organ;
+    },
   },
   getters: {
 
@@ -66,7 +70,11 @@ export default {
           } else {
             reject(res);
           }
-        }).catch(error => reject(error));
+        }).catch((error) => {
+          if (error.response && error.response.status === 403) {
+            reject(error);
+          }
+        });
       });
     },
     /**
@@ -91,9 +99,10 @@ export default {
             commit('SET_USERID', data.userId);
             commit('SET_ROLELIST', data.roles);
             commit('SET_HASGETINFO', true);
+            commit('SET_ORGAN', data.organcode);
             const access = data.roles.map(item => item.roleName);
             commit('SET_ACCESS', access);
-            if (data.roles && data.roles[0].resource) {
+            if (data.roles && data.roles.length > 0 && data.roles[0].resource) {
               commit('SET_RESOURCE', data.roles[0].resource);
             }
             data.access = access;

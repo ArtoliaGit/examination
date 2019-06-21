@@ -9,14 +9,13 @@ import com.bsoft.examination.domain.auth.User;
 import com.bsoft.examination.mapper.auth.UserMapper;
 import com.bsoft.examination.util.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +26,14 @@ import java.util.Map;
 @Service("userService")
 public class UserService implements UserDetailsService {
 
-    @Resource
     private UserMapper userMapper;
 
-    @Autowired
-    private UserInfo userInfo;
+    private final UserInfo userInfo;
+
+    public UserService(UserInfo userInfo, UserMapper userMapper) {
+        this.userInfo = userInfo;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -140,7 +142,11 @@ public class UserService implements UserDetailsService {
         Result result = new Result();
 
         try {
-            userMapper.deleteById(userId);
+            User user = new User();
+            user.setUserId(userId);
+            user.setStatus("0");
+            user.setDisableTime(new Date());
+            userMapper.updateById(user);
             result.setCode(HttpStatus.OK);
             result.setMessage("删除成功");
         } catch (Exception e) {

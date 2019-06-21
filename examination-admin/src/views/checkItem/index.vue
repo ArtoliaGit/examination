@@ -31,8 +31,15 @@
           <el-table-column label="预约方式" prop="way" :formatter="getWayDic" />
           <el-table-column label="归属执行科室" prop="dept" />
           <el-table-column label="执行地点" prop="address" />
+          <el-table-column label="体检使用" prop="tjsy">
+            <template slot-scope="scope">
+              {{ scope.row.tjsy === '1' ? '是' : '否' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="报到机名" prop="reportName" />
+          <el-table-column label="医嘱分类" prop="medicalOrder" />
           <el-table-column label="有效标志" prop="status" :formatter="getStatusDic" />
-          <el-table-column label="操作" align="center" min-width="120" fixed="right">
+          <el-table-column label="操作" align="center" width="160" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
               <el-button
@@ -120,6 +127,27 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="体检使用" prop="tjsy" :label-width="labelWidth">
+              <el-switch
+                v-model="form.tjsy"
+                active-value="1"
+                inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="报到机名" prop="reportName" :label-width="labelWidth">
+              <el-input type="string" v-model="form.reportName" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="医嘱分类" prop="medicalOrder" :label-width="labelWidth">
+              <el-input type="string" v-model="form.medicalOrder" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="有效标志" prop="status" :label-width="labelWidth">
               <el-select v-model="form.status">
                 <el-option
@@ -160,7 +188,7 @@ export default {
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
       labelWidth: '120px',
       title: '新建',
       dialogFormVisible: false,
@@ -172,6 +200,9 @@ export default {
         way: '',
         dept: '',
         address: '',
+        tjsy: '',
+        reportName: '',
+        medicalOrder: '',
         status: '1',
         createUser: '',
         createTime: '',
@@ -198,8 +229,8 @@ export default {
         { key: '2', text: '女' },
       ],
       wayDic: [
-        { key: '1', text: '门诊' },
-        { key: '2', text: '电话' },
+        { key: '1', text: '人次' },
+        { key: '2', text: '部位' },
       ],
     };
   },
@@ -236,7 +267,8 @@ export default {
       this.getTableData();
     },
     handleEdit(val) {
-      this.form = Object.assign({}, val);
+      this.resetForm();
+      this.form = Object.assign(this.form, val);
       this.form.days = this.form.days && parseInt(this.form.days, 10);
       this.op = 'update';
       this.title = '修改';
@@ -254,10 +286,13 @@ export default {
         way: '',
         dept: '',
         address: '',
+        tjsy: '',
+        reportName: '',
+        medicalOrder: '',
         status: '1',
-        createUser: '',
+        createUser: this.$store.state.user.userName,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       };
     },
     handleAdd() {
@@ -344,7 +379,7 @@ export default {
   mounted() {
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

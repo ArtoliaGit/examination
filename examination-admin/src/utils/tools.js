@@ -36,7 +36,7 @@ function formatNumber(n) {
  * 格式化日期
  * @param {Date} date
  */
-export function formatTime(date) {
+export function formatTime(date, pattern) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
@@ -45,8 +45,49 @@ export function formatTime(date) {
   const minute = date.getMinutes();
   const second = date.getSeconds();
 
-  const t1 = [year, month, day].map(formatNumber).join('-');
-  const t2 = [hour, minute, second].map(formatNumber).join(':');
+  let result = pattern;
+  if (pattern.includes('yyyy')) {
+    result = result.replace(/yyyy/g, year);
+  }
+  if (pattern.includes('yy')) {
+    result = result.replace(/yy/g, year.toString().substr(-2));
+  }
+  if (pattern.includes('MM')) {
+    result = result.replace(/MM/g, (Array(2).join('0') + month).slice(-2));
+  }
+  if (pattern.includes('M')) {
+    result = result.replace(/MM/g, month);
+  }
+  if (pattern.includes('dd')) {
+    result = result.replace(/dd/g, (Array(2).join('0') + day).slice(-2));
+  }
+  if (pattern.includes('d')) {
+    result = result.replace(/d/g, day);
+  }
+  if (pattern.includes('HH')) {
+    result = result.replace(/HH/g, (Array(2).join('0') + hour).slice(-2));
+  }
+  if (pattern.includes('H')) {
+    result = result.replace(/H/g, hour);
+  }
+  if (pattern.includes('hh')) {
+    result = result.replace(/hh/g, (Array(2).join('0') + (hour % 12)).slice(-2));
+  }
+  if (pattern.includes('h')) {
+    result = result.replace(/h/g, hour % 12);
+  }
+  if (pattern.includes('mm')) {
+    result = result.replace(/mm/g, (Array(2).join('0') + minute).slice(-2));
+  }
+  if (pattern.includes('m')) {
+    result = result.replace(/m/g, minute);
+  }
+  if (pattern.includes('ss')) {
+    result = result.replace(/ss/g, (Array(2).join('0') + second).slice(-2));
+  }
+  if (pattern.includes('s')) {
+    result = result.replace(/s/g, second);
+  }
 
-  return `${t1} ${t2}`;
+  return result;
 }

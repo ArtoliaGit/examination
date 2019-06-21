@@ -8,7 +8,6 @@ import com.bsoft.examination.service.base.BaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -18,8 +17,11 @@ import java.util.Map;
 @Service
 public class LimbService extends BaseService<Limb, LimbMapper> {
 
-    @Resource
-    private LimbMapper limbMapper;
+    private final LimbMapper limbMapper;
+
+    public LimbService(LimbMapper limbMapper) {
+        this.limbMapper = limbMapper;
+    }
 
     /**
      * 获取部位列表

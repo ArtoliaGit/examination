@@ -6,7 +6,7 @@
           placeholder="用户名"
           v-model="query.username"
           size="small"
-          style="width: 100px;"
+          style="width: 120px;"
           class="filter-item"
         />
         <el-button
@@ -44,12 +44,11 @@
           @row-dblclick="handleEdit"
         >
           <el-table-column label="用户名" prop="username" sortable />
-          <el-table-column label="所属机构" prop="organcode" sortable />
-          <el-table-column label="机构类型" prop="organtype" sortable />
+          <el-table-column label="所属机构" prop="organcode" :formatter="getOrganDic" sortable />
           <el-table-column label="状态" prop="status" :formatter="getStatusDic" sortable />
           <el-table-column label="维护人" prop="createUser" sortable />
           <el-table-column label="维护时间" prop="createTime" sortable />
-          <el-table-column label="维护机构" prop="createUnit" sortable />
+          <el-table-column label="维护机构" prop="createUnit" :formatter="getOrganDic" sortable />
           <el-table-column label="操作" align="center" width="200">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
@@ -86,9 +85,6 @@
       :show-close="false"
     >
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="姓名" prop="personName" :label-width="labelWidth">
-          <el-input type="string" v-model="form.personName" style="width: 50%;" />
-        </el-form-item>
         <el-form-item label="用户名" prop="username" :label-width="labelWidth">
           <el-input type="string" v-model="form.username" style="width: 50%;" />
         </el-form-item>
@@ -96,17 +92,21 @@
           <el-input v-model="form.password" type="password" style="width: 50%;" />
         </el-form-item>
         <el-form-item label="所属机构" prop="organcode" :label-width="labelWidth">
-          <el-input v-model="form.organcode" type="organcode" style="width: 50%;" />
-        </el-form-item>
-        <el-form-item label="机构类型" prop="organtype" :label-width="labelWidth">
-          <el-input v-model="form.organtype" type="organtype" style="width: 50%;" />
+          <el-select v-model="form.organcode" style="width: 50%;">
+            <el-option
+              v-for="item in organDic"
+              :key="item.key"
+              :label="item.text"
+              :value="item.key"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="角色" prop="roles" :label-width="labelWidth">
           <el-select v-model="form.roles" multiple style="width: 50%;">
             <el-option
               v-for="item in roleDic"
               :key="item.roleId"
-              :label="item.roleName"
+              :label="item.roleDescription"
               :value="item.roleId"
             />
           </el-select>
@@ -129,6 +129,7 @@ import {
 import {
   getRoleList,
 } from '@/api/role';
+import { getAllList } from '@/api/organ';
 
 export default {
   name: 'User',
@@ -153,6 +154,9 @@ export default {
         organcode: '',
         organtype: '',
         roles: [],
+        createTime: '',
+        createUser: '',
+        createUnit: '',
       },
       dialogFormVisible: false,
       labelWidth: '120px',
@@ -165,8 +169,9 @@ export default {
       query: {
         username: '',
       },
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
       roleDic: [],
+      organDic: [],
     };
   },
   methods: {
@@ -210,6 +215,9 @@ export default {
         organcode: '',
         organtype: '',
         roles: [],
+        createTime: '',
+        createUser: this.$store.state.user.userName,
+        createUnit: this.$store.state.user.organ,
       };
     },
     handleSave() {
@@ -246,6 +254,9 @@ export default {
       this.form.organcode = val.organcode;
       this.form.organtype = val.organtype;
       this.form.roles = val.roles.map(item => item.roleId);
+      this.form.createTime = val.createTime;
+      this.form.createUser = val.createUser;
+      this.form.createUnit = val.createUnit;
       this.op = 'update';
       this.title = '修改';
       this.dialogFormVisible = true;
@@ -282,12 +293,30 @@ export default {
       }
       return '';
     },
+    setOrganDic() {
+      getAllList().then((res) => {
+        if (res.code === 200) {
+          const { data } = res;
+          if (data.length > 0) {
+            this.organDic = data.map(item => ({ key: item.organcode, text: item.organname }));
+          }
+        }
+      });
+    },
+    getOrganDic(row, column, cellValue, index) {
+      const result = this.organDic.filter(item => cellValue === item.key);
+      if (result.length > 0) {
+        return result[0].text;
+      }
+      return '';
+    },
   },
   mounted() {
     this.getTableData();
     this.getRoleDic();
+    this.setOrganDic();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

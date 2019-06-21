@@ -33,7 +33,7 @@ import java.util.Objects;
 public abstract class BaseService<T, M extends BaseMapper<T>> {
 
     protected Class<T> currentModelClass() {
-        return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), 1);
+        return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), 0);
     }
 
     /**

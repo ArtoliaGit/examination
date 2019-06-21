@@ -16,8 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("notice")
 public class NoticeController {
 
-    @Autowired
-    private NoticeService noticeService;
+    private final NoticeService noticeService;
+
+    public NoticeController(NoticeService noticeService) {
+        this.noticeService = noticeService;
+    }
 
     /**
      * 保存或更新提示信息

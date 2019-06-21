@@ -2,16 +2,16 @@ package com.bsoft.examination.service.auth;
 
 import com.bsoft.examination.common.HttpStatus;
 import com.bsoft.examination.common.Result;
-import com.bsoft.examination.util.JwtTokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登录验证
@@ -20,15 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Qualifier("userService")
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    public AuthService(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     /**
      * 登录
@@ -38,15 +34,22 @@ public class AuthService {
      */
     public Result login(String username, String password) {
         Result<String> result = new Result<>();
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-        final Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        try {
+            UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+            final Authentication authentication = authenticationManager.authenticate(upToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = requestAttributes.getRequest();
+            String sessionId = request.getSession().getId();
 
-        result.setCode(HttpStatus.OK);
-        result.setMessage("登录成功");
-        result.setData(token);
+            result.setCode(HttpStatus.OK);
+            result.setMessage("登录成功");
+            result.setData(sessionId);
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+            result.setCode(403);
+            result.setMessage("验证失败");
+        }
         return result;
     }
 }

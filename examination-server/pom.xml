@@ -22,7 +22,6 @@
         <commons-fileupload.version>1.4</commons-fileupload.version>
         <java-uuid-generator.version>3.2.0</java-uuid-generator.version>
         <swagger-spring-boot-starter.version>1.9.0.RELEASE</swagger-spring-boot-starter.version>
-        <jwt.version>0.10.6</jwt.version>
         <disruptor.version>3.4.2</disruptor.version>
         <mybatis-plus-boot-starter.version>3.1.1</mybatis-plus-boot-starter.version>
         <dynamic-datasource.version>2.5.4</dynamic-datasource.version>
@@ -44,6 +43,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- spring aop -->
@@ -110,25 +115,6 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>${disruptor.version}</version>
-        </dependency>
-
-        <!-- jjwt生成token -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>${jwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>${jwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>${jwt.version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <!-- Apache 工具包 -->

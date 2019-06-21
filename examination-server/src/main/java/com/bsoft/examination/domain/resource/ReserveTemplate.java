@@ -30,7 +30,7 @@ public class ReserveTemplate {
     /**
      * 星期
      */
-    private String week;
+    private Long week;
 
     /**
      * 预约时段
@@ -41,6 +41,26 @@ public class ReserveTemplate {
      * 总限额
      */
     private Integer totalLimit;
+
+    /**
+     * 状态 1:正常 0:禁用
+     */
+    private String status;
+
+    /**
+     * 禁用时间
+     */
+    private Date disableTime;
+
+    /**
+     * 初始化标志 1:完成初始化 0:未完成初始化
+     */
+    private String initFlag;
+
+    /**
+     * 初始化完成时间
+     */
+    private Date initDate;
 
     /**
      * 维护人

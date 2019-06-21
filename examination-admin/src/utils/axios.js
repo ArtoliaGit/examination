@@ -52,10 +52,6 @@ class HttpRequest {
       }
       this.queue[url] = true;
 
-      if (store.state.user.token) {
-        config.headers.Authorization = store.state.user.token;
-      }
-
       return config;
     }, error => Promise.reject(error));
 
@@ -65,6 +61,9 @@ class HttpRequest {
     instance.interceptors.response.use((res) => {
       this.destroy(url);
       const { data } = res;
+      if (res.headers.refreshToken) {
+        store.dispatch('SET_TOKEN', res.headers.refreshToken);
+      }
       return data;
     }, (error) => {
       this.destroy(url);
@@ -77,10 +76,10 @@ class HttpRequest {
           request: { responseURL: config.url },
         };
       }
-      if (errorInfo.status === 504 || errorInfo.status === 404) {
+      if (errorInfo.status === 500 || errorInfo.status === 504 || errorInfo.status === 404) {
         Message({
           type: 'error',
-          message: '网络异常',
+          message: '服务错误',
         });
       } else if (errorInfo.status === 403) {
         if (router.currentRoute.path !== '/login') {

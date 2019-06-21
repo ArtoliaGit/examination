@@ -28,7 +28,7 @@ spring:
 
 mybatis-plus:
   #  mapper-locations: classpath:com/bsoft/examination/mapper/*/*.xml
-  #  type-aliases-package: com.bsoft.examination.domain.*
+  type-aliases-package: com.bsoft.examination.domain
   global-config:
     db-config:
       id-type: uuid
@@ -39,7 +39,6 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
     jdbc-type-for-null: 'null'
-  type-enums-package: com.bsoft.examination.enums
 
 swagger:
   enabled: true

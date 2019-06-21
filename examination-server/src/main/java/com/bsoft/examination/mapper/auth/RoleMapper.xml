@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bsoft.examination.mapper.auth.RoleMapper">
-    <resultMap id="roleMap" type="com.bsoft.examination.domain.auth.Role">
+    <resultMap id="roleMap" type="Role">
         <result property="roleId" column="role_id" />
         <result property="roleName" column="role_name" />
         <result property="roleDescription" column="role_description" />
@@ -11,7 +11,7 @@
         <collection property="resource" column="role_id" ofType="string" javaType="arraylist" select="getResource" />
     </resultMap>
 
-    <insert id="save" parameterType="com.bsoft.examination.domain.auth.Role" keyProperty="roleId">
+    <insert id="save" parameterType="Role" keyProperty="roleId">
         insert into role(role_id, role_name, role_description, create_time, create_user, create_unit)
         values(#{roleId}, #{roleName}, #{roleDescription}, getdate(), #{createUser}, #{createUnit})
     </insert>
@@ -32,7 +32,7 @@
         delete from role_resource where role_id = #{roleId}
     </delete>
 
-    <insert id="saveResource" parameterType="com.bsoft.examination.domain.auth.Role">
+    <insert id="saveResource" parameterType="Role">
         insert into role_resource(role_id, resource_path) values 
         <foreach collection="resource" item="item" index="index" separator=",">
             (#{roleId}, #{item})

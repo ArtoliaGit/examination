@@ -1,8 +1,6 @@
 package com.bsoft.examination.configuration;
 
-import com.bsoft.examination.filter.JwtTokenFilter;
 import com.bsoft.examination.service.auth.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,9 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * spring security配置
@@ -25,12 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Bean
-    public JwtTokenFilter authenticationTokenFilterBean() {
-        return new JwtTokenFilter();
+    public WebSecurityConfiguration(UserService userService) {
+        this.userService = userService;
     }
 
     @Bean
@@ -50,11 +44,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+//                .formLogin()
+//                .loginPage("/index.html")
+//                .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/authentication/**").permitAll()
+                .antMatchers("/index.html").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/img/**").permitAll()
+                .antMatchers("/fonts/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/doc.html").permitAll()
                 .antMatchers("/webjars/**").permitAll()
@@ -69,7 +69,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE).authenticated()
                 .antMatchers(HttpMethod.GET).authenticated();
 
-        httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.headers().cacheControl();
     }
 }

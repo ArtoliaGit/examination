@@ -25,9 +25,9 @@ export default {
       form: {
         id: '',
         days: '',
-        createUser: '',
+        createUser: this.$store.state.user.userName,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       },
       rules: {
         days: [
@@ -42,7 +42,7 @@ export default {
       getData().then((res) => {
         if (res.code === 200 && res.data.length > 0) {
           this.form.id = res.data[0].id;
-          this.form.days = this.form.days && parseInt(res.data[0].days, 10);
+          this.form.days = parseInt(res.data[0].days, 10);
           this.form.createUser = res.data[0].createUser;
           this.form.createTime = res.data[0].createTime;
           this.form.createUnit = res.data[0].createUnit;

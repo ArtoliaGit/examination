@@ -17,3 +17,21 @@ export const remove = params => axios.request({
   params,
   method: 'get',
 });
+
+export const getTableList = params => axios.request({
+  url: '/reserveTemplate/getTableList',
+  params,
+  method: 'get',
+});
+
+export const batchSave = data => axios.request({
+  url: '/reserveTemplate/batchSave',
+  data,
+  method: 'post',
+});
+
+export const initReserveResource = params => axios.request({
+  url: '/reserveTemplate/initReserveResource',
+  params,
+  method: 'get',
+});

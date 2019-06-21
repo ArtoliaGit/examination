@@ -2,7 +2,6 @@ package com.bsoft.examination.web.system;
 
 import com.bsoft.examination.domain.system.ReserveSetting;
 import com.bsoft.examination.service.system.ReserveSettingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("reserveSetting")
 public class ReserveSettingController {
 
-    @Autowired
-    private ReserveSettingService reserveSettingService;
+    private final ReserveSettingService reserveSettingService;
+
+    public ReserveSettingController(ReserveSettingService reserveSettingService) {
+        this.reserveSettingService = reserveSettingService;
+    }
 
     /**
      * 保存或更新预约设置

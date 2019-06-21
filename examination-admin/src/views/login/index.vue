@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   data() {
@@ -70,11 +70,20 @@ export default {
       'handleLogin',
       'getUserInfo',
     ]),
+    ...mapMutations([
+      'setTagNavList',
+    ]),
     handleSubmit() {
       this.handleLogin(this.form).then(() => {
+        this.setTagNavList([]);
         this.getUserInfo().then(() => {
           this.$router.push({
             name: 'home',
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '登录出错',
           });
         });
       }).catch(() => {

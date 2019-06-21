@@ -25,12 +25,12 @@
           size="small"
           @row-dblclick="handleEdit"
         >
-          <el-table-column label="类型" prop="type" />
-          <el-table-column label="检查项目" prop="checkItem" />
+          <el-table-column label="类型" prop="type" width="60" />
+          <el-table-column label="检查项目" prop="checkItem" :formatter="getCheckItemDic" width="100" />
           <el-table-column label="提示信息" prop="info" />
-          <el-table-column label="排序" prop="ord" />
-          <el-table-column label="状态" prop="status" :formatter="getStatusDic" />
-          <el-table-column label="操作" align="center" min-width="120" fixed="right">
+          <el-table-column label="排序" prop="ord" width="60" />
+          <el-table-column label="状态" prop="status" :formatter="getStatusDic" width="60" />
+          <el-table-column label="操作" align="center" width="180" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
               <el-button
@@ -74,7 +74,14 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="检查项目" prop="checkItem" :label-width="labelWidth">
-              <el-input type="string" v-model="form.checkItem" />
+              <el-select v-model="form.checkItem">
+                <el-option
+                  v-for="item in checkItemDic"
+                  :key="item.key"
+                  :label="item.text"
+                  :value="item.key"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -88,7 +95,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="提示信息" prop="info" :label-width="labelWidth">
-              <el-input type="textarea" :rows="2" v-model="form.info" />
+              <el-input type="textarea" :rows="4" v-model="form.info" maxlength="200" show-word-limit />
             </el-form-item>
           </el-col>
         </el-row>
@@ -107,6 +114,7 @@ import {
   save,
   deleteNotice,
 } from '@/api/notice';
+import { getAllList as getCheckItemList } from '@/api/checkItem';
 
 export default {
   name: 'Notice',
@@ -120,7 +128,7 @@ export default {
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
       labelWidth: '120px',
       title: '新建',
       dialogFormVisible: false,
@@ -148,6 +156,7 @@ export default {
         { key: '1', text: '正常' },
         { key: '0', text: '作废' },
       ],
+      checkItemDic: [],
     };
   },
   methods: {
@@ -200,9 +209,9 @@ export default {
         info: '',
         ord: '',
         status: '1',
-        createUser: '',
+        createUser: this.$store.state.user.userName,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       };
     },
     handleAdd() {
@@ -271,11 +280,29 @@ export default {
       }
       return '';
     },
+    setCheckItemDic() {
+      getCheckItemList().then((res) => {
+        if (res.code === 200) {
+          const { data } = res;
+          if (data.length > 0) {
+            this.checkItemDic = data.map(item => ({ key: item.code, text: item.name }));
+          }
+        }
+      });
+    },
+    getCheckItemDic(row, column, cellValue, index) {
+      const result = this.checkItemDic.filter(item => cellValue === item.key);
+      if (result.length > 0) {
+        return result[0].text;
+      }
+      return '';
+    },
   },
   mounted() {
+    this.setCheckItemDic();
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

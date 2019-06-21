@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -220,7 +221,7 @@ public class ExcelUtil {
     private static OutputStream getOutputStream(HttpServletResponse response, String filename, String fileType) {
         String filePath = filename + fileType;
         try {
-            filename = new String(filePath.getBytes(), "ISO-8859-1");
+            filename = new String(filePath.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             response.addHeader("Content-Disposition", "filename=" + filename);
             response.setHeader("Content-Type", "application/msexcel");
             return response.getOutputStream();

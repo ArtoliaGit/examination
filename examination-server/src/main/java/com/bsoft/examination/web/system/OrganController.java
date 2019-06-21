@@ -3,7 +3,6 @@ package com.bsoft.examination.web.system;
 import com.bsoft.examination.domain.system.Organ;
 import com.bsoft.examination.service.system.OrganService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +15,11 @@ import java.util.Map;
 @RequestMapping("organ")
 public class OrganController {
 
-    @Autowired
-    private OrganService organService;
+    private final OrganService organService;
+
+    public OrganController(OrganService organService) {
+        this.organService = organService;
+    }
 
     /**
      * 获取机构列表

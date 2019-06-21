@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bsoft.examination.mapper.auth.UserMapper">
     
-    <resultMap id="userMap" type="com.bsoft.examination.domain.auth.User">
+    <resultMap id="userMap" type="User">
         <result property="userId" column="user_id" />
         <result property="username" column="username" />
         <result property="password" column="password" />
@@ -12,7 +12,7 @@
         <result property="createUser" column="create_user" />
         <result property="createTime" column="create_time" />
         <result property="createUnit" column="create_unit" />
-        <collection property="roles" ofType="com.bsoft.examination.domain.auth.Role" column="user_id"
+        <collection property="roles" ofType="Role" column="user_id"
                     select="com.bsoft.examination.mapper.auth.RoleMapper.getRolesByUser" />
     </resultMap>
 
@@ -23,9 +23,9 @@
         where username = #{username}
     </select>
 
-    <insert id="save" parameterType="com.bsoft.examination.domain.auth.User"
+    <insert id="save" parameterType="User"
             useGeneratedKeys="true" keyProperty="userId">
-        insert into systemuser(user_id, username, password, create_time, create_user, status, organtype, organcode)
+        insert into systemuser(user_id, username, password, create_time, create_user, status, organtype, organcode, create_unit)
         values(
                #{userId},
                #{username},
@@ -34,7 +34,8 @@
                #{createUser,jdbcType=VARCHAR},
                #{status,jdbcType=VARCHAR},
                #{organtype,jdbcType=VARCHAR} ,
-               #{organcode,jdbcType=VARCHAR}
+               #{organcode,jdbcType=VARCHAR},
+               #{createUnit,jdbcType=VARCHAR}
                )
     </insert>
 
@@ -42,7 +43,7 @@
             resultMap="userMap">
         select * from systemuser
         <where>
-            <if test="params.username != null and params.username != ''">
+            <if test='params.username != null and params.username != ""'>
                 username = #{params.username}
             </if>
         </where>

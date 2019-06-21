@@ -1,10 +1,9 @@
 package com.bsoft.examination.mapper.auth;
 
-import com.bsoft.examination.domain.auth.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Mapper;
+import com.bsoft.examination.domain.auth.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
@@ -13,7 +12,6 @@ import java.util.Map;
  * 用户mapper
  * @author Artolia Pendragon
  */
-@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
     /**

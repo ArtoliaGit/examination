@@ -1,17 +1,18 @@
 package com.bsoft.examination.util;
 
-import freemarker.core.ParseException;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
+ * 导出word
  * @author Artolia Pendragon
  * @version 1.0.0
- * @Description TODO
- * @createTime 2019年05月12日 12:00:00
  */
 public class WordUtil {
 
@@ -29,21 +30,14 @@ public class WordUtil {
             Template template = configuration.getTemplate(templateName);
             File outFile = new File("D:/temp" + File.separator + fileName);
             if (!outFile.getParentFile().exists()) {
-                outFile.getParentFile().mkdirs();
+                boolean mkdirs = outFile.getParentFile().mkdirs();
+                if (!mkdirs) return;
             }
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8"));
+            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8));
             template.process(dataMap, out);
             out.flush();
             out.close();
-        } catch (TemplateNotFoundException e) {
-            e.printStackTrace();
-        } catch (MalformedTemplateNameException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
     }
@@ -61,24 +55,16 @@ public class WordUtil {
             configuration.setDefaultEncoding("UTF-8");
             configuration.setClassForTemplateLoading(WordUtil.class, "/templates/");
             Template template = configuration.getTemplate(templateName);
-            fileName = new String(fileName.getBytes(), "ISO-8859-1");
+            fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             response.setHeader("Content-Type", "application/msword");
 
             OutputStream outputStream = response.getOutputStream();
-            Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
             template.process(dataMap, out);
             out.flush();
             out.close();
-        } catch (TemplateNotFoundException e) {
-            e.printStackTrace();
-        } catch (MalformedTemplateNameException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
     }

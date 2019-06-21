@@ -151,11 +151,12 @@ export default {
         createTime: '',
         createUser: '',
         createUnit: '',
-        resource: '',
+        resource: [],
       },
       resourceFormVisible: false,
       rules: {
         roleName: [{ required: true, message: '不能为空', trigger: 'change' }],
+        roleDescription: [{ required: true, message: '不能为空', trigger: 'change' }],
       },
       treeData: [],
       defaultProps: {
@@ -163,7 +164,7 @@ export default {
         label: 'label',
       },
       defaultChecked: [],
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
     };
   },
   methods: {
@@ -216,9 +217,9 @@ export default {
         roleName: '',
         roleDescription: '',
         createTime: '',
-        createUser: '',
-        createUnit: '',
-        resource: '',
+        createUser: this.$store.state.user.userName,
+        createUnit: this.$store.state.user.organ,
+        resource: [],
       };
       this.op = 'create';
       this.title = '新建';
@@ -316,7 +317,7 @@ export default {
   mounted() {
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

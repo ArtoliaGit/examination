@@ -10,10 +10,8 @@ import com.bsoft.examination.domain.auth.Role;
 import com.bsoft.examination.mapper.auth.RoleMapper;
 import com.bsoft.examination.util.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +23,14 @@ import java.util.Map;
 @Service
 public class RoleService {
 
-    @Resource
-    private RoleMapper roleMapper;
+    private final RoleMapper roleMapper;
 
-    @Autowired
-    private UserInfo userInfo;
+    private final UserInfo userInfo;
+
+    public RoleService(UserInfo userInfo, RoleMapper roleMapper) {
+        this.userInfo = userInfo;
+        this.roleMapper = roleMapper;
+    }
 
     /**
      * 获取角色列表
@@ -74,7 +75,7 @@ public class RoleService {
         try {
             if ("create".equals(op)) {
                 QueryWrapper<Role> query = new QueryWrapper<>();
-                query.eq("roleName", role.getRoleName());
+                query.eq("role_name", role.getRoleName());
                 int num = roleMapper.selectCount(query);
                 if (num > 0) {
                     result.setCode(HttpStatus.NO_CONTENT);

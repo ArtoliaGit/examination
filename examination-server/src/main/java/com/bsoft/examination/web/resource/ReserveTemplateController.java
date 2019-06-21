@@ -3,10 +3,10 @@ package com.bsoft.examination.web.resource;
 import com.bsoft.examination.domain.resource.ReserveTemplate;
 import com.bsoft.examination.service.resource.ReserveTemplateService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 资源模板controller
@@ -16,8 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("reserveTemplate")
 public class ReserveTemplateController {
 
-    @Autowired
-    private ReserveTemplateService reserveTemplateService;
+    private final ReserveTemplateService reserveTemplateService;
+
+    public ReserveTemplateController(ReserveTemplateService reserveTemplateService) {
+        this.reserveTemplateService = reserveTemplateService;
+    }
 
     /**
      * 保存或更新资源模板
@@ -47,5 +50,33 @@ public class ReserveTemplateController {
     @GetMapping("/delete")
     public String delete(String id) {
         return reserveTemplateService.removeById(id).toJson();
+    }
+
+    /**
+     * 初始化数据
+     * @param checkItem 检查项目
+     * @return String
+     */
+    @GetMapping("/initReserveResource")
+    public String initReserveResource(String checkItem) {
+        return reserveTemplateService.initReserveResource(checkItem).toJson();
+    }
+
+    /**
+     * 获取模板列表
+     * @param checkItem 检查项目
+     * @return String
+     */
+    @GetMapping("/getTableList")
+    public String getTableList(String checkItem) {
+        return reserveTemplateService.getTableList(checkItem).toJson();
+    }
+
+    /**
+     * 批量保存
+     */
+    @PostMapping("/batchSave")
+    public String batchSave(@RequestBody List<ReserveTemplate> maps) {
+        return reserveTemplateService.batchSave(maps).toJson();
     }
 }

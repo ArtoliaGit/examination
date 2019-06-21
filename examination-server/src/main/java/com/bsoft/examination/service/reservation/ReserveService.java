@@ -6,7 +6,6 @@ import com.bsoft.examination.mapper.reservation.ReserveMapper;
 import com.bsoft.examination.service.base.BaseService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -16,8 +15,11 @@ import java.util.Map;
 @Service
 public class ReserveService extends BaseService<Reserve, ReserveMapper> {
 
-    @Resource
-    private ReserveMapper reserveMapper;
+    private final ReserveMapper reserveMapper;
+
+    public ReserveService(ReserveMapper reserveMapper) {
+        this.reserveMapper = reserveMapper;
+    }
 
     /**
      * 获取预约信息列表

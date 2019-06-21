@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="8" class="left">
+    <el-row class="content">
+      <el-col :span="7" class="left">
         <el-row class="first">
           <el-row class="title">预约申请</el-row>
           <el-row class="search" :gutter="20">
@@ -23,162 +23,55 @@
         </el-row>
         <el-row class="second">
           <el-row class="title">预约信息</el-row>
-          <el-row>
-            <div class="card">
-              <div style="display: flex; border-bottom: 1px solid;">
-                <div style="flex: 2;">项目名称</div>
-                <div style="flex: 1;">预约时间</div>
-                <div style="flex: 1;">申请单号</div>
-              </div>
-              <div style="display: flex; margin-top: 10px;">
-                <div style="flex: 2;">B超</div>
-                <div style="flex: 1;">2018.5.6</div>
-                <div style="flex: 1;">00192734</div>
-              </div>
-              <div
-                style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"
-              >
-                <div style="display: flex; grid-column: 1/3; align-items: center;">
-                  <div style="flex: 1">姓名</div>
-                  <div style="flex: 1">刘世丽</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div style="flex: 1">姓别</div>
-                  <div style="flex: 1">女</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div style="flex: 1">年龄</div>
-                  <div style="flex: 1">29</div>
-                </div>
-                <div style="display: flex; grid-column: 1/3; align-items: center;">
-                  <div style="flex: 1">检查部位</div>
-                  <div style="flex: 1">腹部</div>
-                </div>
-                <div style="grid-row: 2; grid-column: 4; color: green;">已付费</div>
-              </div>
-            </div>
-            <div class="card" style="background-color: #efd2ae54;">
-              <div style="display: flex; border-bottom: 1px solid;">
-                <div style="flex: 2;">项目名称</div>
-                <div style="flex: 1;">预约时间</div>
-                <div style="flex: 1;">申请单号</div>
-              </div>
-              <div style="display: flex; margin-top: 10px;">
-                <div style="flex: 2;">B超</div>
-                <div style="flex: 1;">2018.5.6</div>
-                <div style="flex: 1;">00192734</div>
-              </div>
-              <div
-                style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"
-              >
-                <div style="display: flex; grid-column: 1/3; align-items: center;">
-                  <div style="flex: 1">姓名</div>
-                  <div style="flex: 1">刘世丽</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div style="flex: 1">姓别</div>
-                  <div style="flex: 1">女</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div style="flex: 1">年龄</div>
-                  <div style="flex: 1">29</div>
-                </div>
-                <div style="display: flex; grid-column: 1/3; align-items: center;">
-                  <div style="flex: 1">检查部位</div>
-                  <div style="flex: 1">腹部</div>
-                </div>
-                <div style="grid-row: 2; grid-column: 4; color: red;">未付费</div>
-              </div>
-            </div>
-            <div class="card" style="background-color: #efd2ae54;">
-              <div style="display: flex; border-bottom: 1px solid;">
-                <div style="flex: 2;">项目名称</div>
-                <div style="flex: 1;">预约时间</div>
-                <div style="flex: 1;">申请单号</div>
-              </div>
-              <div style="display: flex; margin-top: 10px;">
-                <div style="flex: 2;">B超</div>
-                <div style="flex: 1;">2018.5.6</div>
-                <div style="flex: 1;">00192734</div>
-              </div>
-              <div
-                style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"
-              >
-                <div style="display: flex; grid-column: 1/3; align-items: center;">
-                  <div style="flex: 1">姓名</div>
-                  <div style="flex: 1">刘世丽</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div style="flex: 1">姓别</div>
-                  <div style="flex: 1">女</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div style="flex: 1">年龄</div>
-                  <div style="flex: 1">29</div>
-                </div>
-                <div style="display: flex; grid-column: 1/3; align-items: center;">
-                  <div style="flex: 1">检查部位</div>
-                  <div style="flex: 1">腹部</div>
-                </div>
-                <div style="grid-row: 2; grid-column: 4; color: red;">未付费</div>
-              </div>
-            </div>
+          <el-row class="reserveInfo">
+            <reserve-info
+              v-for="item in reserveInfoList"
+              :key="item.id"
+              :apply-list="item.applyList"
+              :person-info="item.personInfo"
+              :pay-status="item.payStatus"
+            />
           </el-row>
         </el-row>
         <el-row class="third">
           <el-row>
-            <span style="margin-right: 20px;">预约历史</span>
+            <span style="margin-right: 20px; font-weight: bold;">预约历史</span>
             <el-button type="primary" size="mini">打印</el-button>
             <el-button type="primary" size="mini">退约</el-button>
             <el-button type="primary" size="mini">改约</el-button>
           </el-row>
           <el-row>
-            <table style="width: 100%;">
+            <!-- <table style="width: 100%; text-align: left;">
               <tr>
                 <th>项目名称</th>
                 <th>检查时间</th>
                 <th>申请单号</th>
               </tr>
-              <tr>
-                <td>B超</td>
-                <td>2018.4.6</td>
-                <td>00182898</td>
+              <tr v-for="item in reserveHistory" :key="item.id">
+                <td>{{ item.checkItem }}</td>
+                <td>{{ item.checkTime }}</td>
+                <td>{{ item.applyNo }}</td>
               </tr>
-              <tr>
-                <td>B超</td>
-                <td>2018.4.6</td>
-                <td>00182898</td>
-              </tr>
-            </table>
+            </table> -->
+            <el-table :data="reserveHistory" size="mini" style="margin-top: 5px; width: 100%;">
+              <el-table-column prop="checkItem" label="项目名称" />
+              <el-table-column prop="checkTime" label="检查时间" />
+              <el-table-column prop="applyNo" label="申请单号" />
+            </el-table>
           </el-row>
         </el-row>
       </el-col>
-      <el-col :span="16" class="right">
-        <div>
-          <div style="font-weight: bold;">预约时间</div>
-          <div style="padding: 5px; margin-right: 50px;">
-            <div style="display: grid; grid-template-columns: repeat(14, 1fr); grid-gap: 10px;">
-              <div
-                v-for="item in 30"
-                :key="item"
-                style="width: 40px; height: 40px; background-color: green; border-radius: 5px;"
-              />
-            </div>
+      <el-col :span="17" class="right">
+        <div class="first">
+          <div class="title">预约时间</div>
+          <div class="reserve-content">
+            <reserve-date :date-list="dateList" @activeDate="getSelectDate" />
           </div>
         </div>
-        <div>
+        <div class="second">
           <div style="font-weight: bold;">预约时段</div>
-          <div style="display: grid; grid-template-columns: repeat(7, 1fr); grid-gap: 10px;">
-            <div
-              v-for="item in 9"
-              :key="item"
-              style="width: 80px; height: 80px; background-color: #2cdaca; border-radius: 5px; padding: 5px;"
-            >
-              <div>5.7</div>
-              <div>8:00-9:00</div>
-              <div>B超1</div>
-              <div style="float: right;">余3</div>
-            </div>
+          <div class="second">
+            <reserve-time :time-list="timeList" />
           </div>
         </div>
       </el-col>
@@ -187,22 +80,171 @@
 </template>
 
 <script>
+import ReserveInfo from '@/components/reserveInfo';
+import ReserveDate from '@/components/reserveDate';
+import ReserveTime from '@/components/reserveTime';
+
 export default {
   name: 'Reservation',
+  components: {
+    ReserveInfo,
+    ReserveDate,
+    ReserveTime,
+  },
   data() {
     return {
       type: 1,
+      reserveInfoList: [
+        {
+          id: 1,
+          applyList: [{
+            id: 1, checkItem: 'B超', reserveDate: '2018.6.4', applyNo: '00192734',
+          }],
+          personInfo: {
+            personName: '刘世丽',
+            gender: '女',
+            age: 40,
+            limb: '胸部',
+          },
+          payStatus: 1,
+        },
+        {
+          id: 2,
+          applyList: [{
+            id: 2, checkItem: 'B超', reserveDate: '2018.6.4', applyNo: '00192734',
+          }],
+          personInfo: {
+            personName: '刘世丽',
+            gender: '女',
+            age: 40,
+            limb: '胸部',
+          },
+          payStatus: 0,
+        },
+      ],
+      reserveHistory: [
+        {
+          id: 1, checkItem: 'B超', checkTime: '2019.6.4', applyNo: '00182898',
+        },
+        {
+          id: 2, checkItem: 'B超', checkTime: '2019.6.4', applyNo: '00182898',
+        },
+      ],
+      isActive: 0,
+      dateList: [
+        {
+          year: 2019, month: 6, day: 1, date: '2019-06-01',
+        },
+        {
+          year: 2019, month: 6, day: 2, date: '2019-06-02',
+        },
+        {
+          year: 2019, month: 6, day: 3, date: '2019-06-03',
+        },
+        {
+          year: 2019, month: 6, day: 4, date: '2019-06-04',
+        },
+        {
+          year: 2019, month: 6, day: 5, date: '2019-06-05',
+        },
+        {
+          year: 2019, month: 6, day: 6, date: '2019-06-06',
+        },
+        {
+          year: 2019, month: 6, day: 7, date: '2019-06-07',
+        },
+        {
+          year: 2019, month: 6, day: 8, date: '2019-06-08',
+        },
+        {
+          year: 2019, month: 6, day: 9, date: '2019-06-09',
+        },
+        {
+          year: 2019, month: 6, day: 10, date: '2019-06-10',
+        },
+        {
+          year: 2019, month: 6, day: 11, date: '2019-06-11',
+        },
+        {
+          year: 2019, month: 6, day: 12, date: '2019-06-12',
+        },
+        {
+          year: 2019, month: 6, day: 13, date: '2019-06-13',
+        },
+        {
+          year: 2019, month: 6, day: 14, date: '2019-06-14',
+        },
+        {
+          year: 2019, month: 7, day: 1, date: '2019-07-01',
+        },
+        {
+          year: 2019, month: 7, day: 2, date: '2019-07-02',
+        },
+      ],
+      timeList: [
+        {
+          id: '1', date: '5.4', dept: 'B超1', time: '8:00-9:00', num: 3,
+        },
+        {
+          id: '2', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '3', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '4', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '5', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '6', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '7', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '8', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '9', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '10', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '21', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '22', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+        {
+          id: '23', date: '5.4', dept: 'B超2', time: '9:00-10:00', num: 4,
+        },
+      ],
     };
   },
-  methods: {},
+  methods: {
+    getSelectDate(date) {
+      console.log(date);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.content {
+  height: calc(100vh - 125px);
+  user-select: none;
+}
 .left {
-  border-right: 2px solid #eee;
+  border-right: 2px solid #d1d1d1;
+  height: calc(100vh - 125px);
+  display: flex;
+  flex-direction: column;
   .first {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d1d1d1;
+    flex: 1;
     .title {
       font-weight: bold;
     }
@@ -214,24 +256,47 @@ export default {
     }
     .single {
       margin-top: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
   }
   .second {
+    flex: 3;
     padding-top: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d1d1d1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     .title {
       font-weight: bold;
+      flex: 1,
     }
-    .card {
-      background-color: #00ffff54;
-      border-radius: 10px;
-      padding: 10px;
-      margin: 10px;
+    .reserveInfo {
+      overflow: hidden;
+      overflow-y: auto;
+      flex: 12;
     }
   }
   .third {
+    flex: 1;
     padding-top: 5px;
   }
+}
+.right {
+  padding-left: 10px;
+  .first {
+    height: 200px;
+    .title {
+      font-weight: bold;
+    }
+    .reserve-content {
+      padding: 5px;
+    }
+  }
+  .second {
+    padding: 5px;
+  }
+}
+.el-radio {
+  margin-right: 5px;
 }
 </style>

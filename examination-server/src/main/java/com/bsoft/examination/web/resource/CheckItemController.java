@@ -1,9 +1,9 @@
 package com.bsoft.examination.web.resource;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bsoft.examination.domain.resource.CheckItem;
 import com.bsoft.examination.service.resource.CheckItemService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/checkItem")
 public class CheckItemController {
 
-    @Autowired
-    private CheckItemService checkItemService;
+    private final CheckItemService checkItemService;
+
+    public CheckItemController(CheckItemService checkItemService) {
+        this.checkItemService = checkItemService;
+    }
 
     /**
      * 保存或更新检查项目
@@ -54,6 +57,11 @@ public class CheckItemController {
      */
     @GetMapping("/getAllList")
     public String getAllList(HttpServletRequest request) {
-        return checkItemService.list().toJson();
+        String way = request.getParameter("way");
+        QueryWrapper<CheckItem> wrapper = new QueryWrapper<>();
+        if (way != null) {
+            wrapper.eq("way", way);
+        }
+        return checkItemService.list(wrapper).toJson();
     }
 }

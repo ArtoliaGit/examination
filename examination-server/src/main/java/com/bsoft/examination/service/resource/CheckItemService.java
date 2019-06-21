@@ -8,7 +8,6 @@ import com.bsoft.examination.service.base.BaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -18,8 +17,11 @@ import java.util.Map;
 @Service
 public class CheckItemService extends BaseService<CheckItem, CheckItemMapper> {
 
-    @Resource
-    private CheckItemMapper checkItemMapper;
+    private final CheckItemMapper checkItemMapper;
+
+    public CheckItemService(CheckItemMapper checkItemMapper) {
+        this.checkItemMapper = checkItemMapper;
+    }
 
     /**
      * 获取检查项目列表

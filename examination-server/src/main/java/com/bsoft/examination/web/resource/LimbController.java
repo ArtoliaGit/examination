@@ -3,7 +3,6 @@ package com.bsoft.examination.web.resource;
 import com.bsoft.examination.domain.resource.Limb;
 import com.bsoft.examination.service.resource.LimbService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/limb")
 public class LimbController {
 
-    @Autowired
-    private LimbService limbService;
+    private final LimbService limbService;
+
+    public LimbController(LimbService limbService) {
+        this.limbService = limbService;
+    }
 
     /**
      * 保存或更新检查部位

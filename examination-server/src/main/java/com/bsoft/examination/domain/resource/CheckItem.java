@@ -53,7 +53,22 @@ public class CheckItem {
     private String address;
 
     /**
-     * 有效标志
+     * 体检使用
+     */
+    private String tjsy;
+
+    /**
+     * 报到机名称
+     */
+    private String reportName;
+
+    /**
+     * 医嘱分类
+     */
+    private String medicalOrder;
+
+    /**
+     * 有效标志 1: 有效 0: 无效
      */
     private String status;
 

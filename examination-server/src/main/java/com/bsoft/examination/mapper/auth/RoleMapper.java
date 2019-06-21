@@ -1,10 +1,9 @@
 package com.bsoft.examination.mapper.auth;
 
-import com.bsoft.examination.domain.auth.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Mapper;
+import com.bsoft.examination.domain.auth.Role;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  * 角色mapper
  * @author artolia
  */
-@Mapper
 public interface RoleMapper extends BaseMapper<Role> {
 
     /**

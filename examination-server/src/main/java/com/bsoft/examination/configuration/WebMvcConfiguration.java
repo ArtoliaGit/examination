@@ -1,14 +1,13 @@
 package com.bsoft.examination.configuration;
 
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.ErrorPage;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * webmvc配置
@@ -25,22 +24,13 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/download/**").addResourceLocations("file:D:/temp/");
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/images/favicon.ico");
-        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    /**
-     * 设置response编码
-     */
     @Bean
-    public HttpMessageConverter<String> responseBodyStringConverter() {
-        return new StringHttpMessageConverter(StandardCharsets.UTF_8);
+    public ConfigurableServletWebServerFactory containerCustomizer() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/index.html"));
+        return factory;
     }
 
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters){
-        converters.add(responseBodyStringConverter());
-    }
 }

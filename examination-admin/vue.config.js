@@ -9,7 +9,7 @@ const BASE_URL = process.env.NODE_ENV === 'production'
 
 module.exports = {
   publicPath: BASE_URL,
-  runtimeCompiler: true,
+  runtimeCompiler: false,
   lintOnSave: true,
   outputDir: 'dist',
   assetsDir: undefined,
@@ -29,9 +29,8 @@ module.exports = {
           threshold: 10240,
           deleteOriginalAssets: false,
         })],
-        devtool: false,
         performance: {
-          maxEntrypointSize: 1024000,
+          maxEntrypointSize: 1024000 * 2,
           maxAssetSize: 2048000,
         },
       };

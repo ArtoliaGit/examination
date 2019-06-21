@@ -25,16 +25,17 @@
           size="small"
           @row-dblclick="handleEdit"
         >
-          <el-table-column label="机构编码" prop="organcode" />
+          <el-table-column label="机构编码" prop="organcode" width="100" />
           <el-table-column label="机构名称" prop="organname" />
+          <el-table-column label="机构简码" prop="organShortCode" />
           <el-table-column label="机构类型" prop="type" width="80" :formatter="getOrganType" />
-          <el-table-column label="数据库类型" prop="driverclass" :formatter="getDriverDic" />
+          <el-table-column label="数据库类型" prop="driverclass" :formatter="getDriverDic" width="90" />
           <el-table-column label="数据库名" prop="name" width="80" />
-          <el-table-column label="数据库ip" prop="ip" width="120" />
-          <el-table-column label="数据库端口" prop="port" />
-          <el-table-column label="数据库用户名" prop="username" width="80" />
-          <el-table-column label="数据库密码" prop="password" />
-          <el-table-column label="操作" align="center" min-width="120" fixed="right">
+          <el-table-column label="数据库ip" prop="ip" width="100" />
+          <el-table-column label="数据库端口" prop="port" width="90" />
+          <el-table-column label="用户名" prop="username" width="80" />
+          <el-table-column label="密码" prop="password" width="90" />
+          <el-table-column label="操作" align="center" width="180" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
               <el-button
@@ -96,6 +97,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="机构简码" prop="organShortCode" :label-width="labelWidth">
+              <el-input type="string" v-model="form.organShortCode" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="数据库类型" prop="driverclass" :label-width="labelWidth">
               <el-select v-model="form.driverclass">
                 <el-option
@@ -107,32 +115,30 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <el-form-item label="数据库名" prop="name" :label-width="labelWidth">
               <el-input type="string" v-model="form.name" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="数据库ip" prop="ip" :label-width="labelWidth">
               <el-input type="string" v-model="form.ip" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <el-form-item label="数据库端口" prop="port" :label-width="labelWidth">
               <el-input type="string" v-model.number="form.port" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="数据库用户名" prop="username" :label-width="labelWidth">
               <el-input type="string" v-model="form.username" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <el-form-item label="数据库密码" prop="password" :label-width="labelWidth">
               <el-input type="string" v-model="form.password" />
@@ -178,7 +184,7 @@ export default {
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 260,
+      maxHeight: window.innerHeight - 210,
       labelWidth: '120px',
       title: '新建',
       dialogFormVisible: false,
@@ -187,6 +193,7 @@ export default {
         organcode: '',
         organname: '',
         type: '',
+        organShortCode: '',
         driverclass: '',
         name: '',
         ip: '',
@@ -210,6 +217,7 @@ export default {
         ],
         username: [{ required: true, message: '不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        organShortCode: [{ required: true, message: '不能为空', trigger: 'blur' }],
       },
       driverDic: [
         { key: '1', text: 'Mysql' },
@@ -255,7 +263,8 @@ export default {
       this.getTableData();
     },
     handleEdit(val) {
-      this.form = Object.assign({}, val);
+      this.resetForm();
+      this.form = Object.assign(this.form, val);
       this.form.port = parseInt(this.form.port, 10);
       this.op = 'update';
       this.title = '修改';
@@ -270,15 +279,16 @@ export default {
         organcode: '',
         organname: '',
         type: '',
+        organShortCode: '',
         driverclass: '',
         name: '',
         ip: '',
         port: '',
         username: '',
         password: '',
-        createUser: '',
+        createUser: this.$store.state.user.userName,
         createTime: '',
-        createUnit: '',
+        createUnit: this.$store.state.user.organ,
       };
     },
     handleAdd() {
@@ -358,7 +368,7 @@ export default {
   mounted() {
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 260;
+      this.maxHeight = window.innerHeight - 210;
     };
   },
 };

@@ -1,22 +1,21 @@
-import Cookies from 'js-cookie';
 import config from '@/config';
 import { objEqual } from './tools';
 
-const { cookieExpires, TOKEN_KEY, title } = config;
+const { TOKEN_KEY, title } = config;
 
 /**
  * @description 设置cookie中的token
  * @param {String} token
  */
 export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 });
+  sessionStorage.setItem(TOKEN_KEY, token);
 };
 
 /**
  * @description 从cookie中获取token
  */
 export const getToken = () => {
-  const token = Cookies.get(TOKEN_KEY);
+  const token = sessionStorage.getItem(TOKEN_KEY);
   if (token) {
     return token;
   }

@@ -3,7 +3,6 @@ package com.bsoft.examination.web.resource;
 import com.bsoft.examination.domain.resource.ReserveTime;
 import com.bsoft.examination.service.resource.ReserveTimeService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("reserveTime")
 public class ReserveTimeController {
 
-    @Autowired
-    private ReserveTimeService reserveTimeService;
+    private final ReserveTimeService reserveTimeService;
+
+    public ReserveTimeController(ReserveTimeService reserveTimeService) {
+        this.reserveTimeService = reserveTimeService;
+    }
 
     /**
      * 保存或更新预约时段

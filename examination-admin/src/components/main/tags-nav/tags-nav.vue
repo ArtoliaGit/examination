@@ -35,9 +35,9 @@
       <div ref="scrollBody" class="scroll-body" :style="{left: tagBodyLeft + 'px'}">
         <transition-group name="taglist-moving-animation">
           <router-link
-            v-for="(item, index) in list"
+            v-for="item in list"
             ref="tagsPageOpened"
-            :key="`tag-nav-${index}`"
+            :key="item.name"
             :class="isCurrentTag(item)?'active':''"
             :data-route-item="item"
             :to="{ path: item.path, query: item.query, fullPath: item.fullPath }"

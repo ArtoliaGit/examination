@@ -14,7 +14,6 @@ import com.bsoft.examination.mapper.system.OrganMapper;
 import com.bsoft.examination.service.base.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +28,23 @@ import java.util.Map;
 @Service
 public class OrganService extends BaseService<Organ, OrganMapper> {
 
-    @Autowired
-    @Qualifier("dataSource")
-    DataSource dataSource;
+    private final DataSource dataSource;
 
     /**
      * 多数据源创建器
      */
-    @Autowired
-    private DynamicDataSourceCreator dynamicDataSourceCreator;
+    private final DynamicDataSourceCreator dynamicDataSourceCreator;
 
-    @Autowired
-    private CustomDynamicDataSourceProvider customDynamicDataSourceProvider;
+    private final CustomDynamicDataSourceProvider customDynamicDataSourceProvider;
 
-    @Autowired
-    private OrganMapper organMapper;
+    private final OrganMapper organMapper;
+
+    public OrganService(@Qualifier("dataSource") DataSource dataSource, DynamicDataSourceCreator dynamicDataSourceCreator, CustomDynamicDataSourceProvider customDynamicDataSourceProvider, OrganMapper organMapper) {
+        this.dataSource = dataSource;
+        this.dynamicDataSourceCreator = dynamicDataSourceCreator;
+        this.customDynamicDataSourceProvider = customDynamicDataSourceProvider;
+        this.organMapper = organMapper;
+    }
 
     /**
      * 保存和更新机构
@@ -152,7 +153,7 @@ public class OrganService extends BaseService<Organ, OrganMapper> {
      * @param organ 数据源实体
      * @return boolean
      */
-    public boolean addDataSource(Organ organ) {
+    private boolean addDataSource(Organ organ) {
         boolean flag = false;
 
         String name = organ.getName();
@@ -161,10 +162,9 @@ public class OrganService extends BaseService<Organ, OrganMapper> {
         String port = organ.getPort();
         String user = organ.getUsername();
         String password = organ.getPassword();
-        String type = organ.getType();
         String organcode = organ.getOrgancode();
 
-        if (StringUtils.isAnyBlank(name, driverType, ip, port, user, password, type, organcode)) {
+        if (StringUtils.isAnyBlank(name, driverType, ip, port, user, password, organcode)) {
             return false;
         }
 
@@ -183,11 +183,7 @@ public class OrganService extends BaseService<Organ, OrganMapper> {
             dataSourceProperty.setUsername(user);
             dataSourceProperty.setPassword(password);
 
-            if ("1".equals(type)) {
-                dataSourceProperty.setPollName(organcode);
-            } else {
-                dataSourceProperty.setPollName(name);
-            }
+            dataSourceProperty.setPollName(organcode);
 
             DataSource newDataSource = dynamicDataSourceCreator.createDataSource(dataSourceProperty);
 
@@ -207,7 +203,7 @@ public class OrganService extends BaseService<Organ, OrganMapper> {
      * @param organ 数据源实体
      * @return boolean
      */
-    public boolean removeDataSource(Organ organ) {
+    private boolean removeDataSource(Organ organ) {
         boolean flag;
         String type = organ.getType();
         String ds;

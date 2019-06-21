@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.support.JdbcUtils;
 
 import javax.sql.DataSource;
+import javax.validation.constraints.NotBlank;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,13 +90,11 @@ public class CustomDynamicDataSourceProvider extends YmlDynamicDataSourceProvide
      * @return 数据源参数
      * @throws SQLException sql异常
      */
-    private Map<String, DataSourceProperty> executeStmt(Statement statement) throws SQLException {
+    private Map<String, DataSourceProperty> executeStmt(@NotBlank Statement statement) throws SQLException {
         String sql = "select name, driverclass, ip, port," +
                 " username, password, organcode, type from organ";
         ResultSet result = statement.executeQuery(sql);
-        if (result == null) {
-            return null;
-        }
+
         Map<String, DataSourceProperty> dataSourcePropertyMap = new HashMap<>();
         while (result.next()) {
             String name = result.getString(1);
@@ -105,7 +104,6 @@ public class CustomDynamicDataSourceProvider extends YmlDynamicDataSourceProvide
             String user = result.getString(5);
             String password = result.getString(6);
             String organcode = result.getString(7);
-            String type = result.getString(8);
 
             Map<String, String> map = getUrl(driverType, ip, port, name);
             String url = map.get("url");
@@ -121,19 +119,14 @@ public class CustomDynamicDataSourceProvider extends YmlDynamicDataSourceProvide
             property.setUsername(user);
             property.setPassword(password);
 
-            if ("1".equals(type)) {
-                dataSourcePropertyMap.put(organcode, property);
-            } else {
-                dataSourcePropertyMap.put(name, property);
-            }
-
+            dataSourcePropertyMap.put(organcode, property);
         }
         return dataSourcePropertyMap;
     }
 
     public Map<String, String> getUrl(String driverType, String ip, String port, String name) {
-        String driverClass = "";
-        String url = "";
+        String driverClass;
+        String url;
 
         switch (driverType) {
             case "2": //sql server

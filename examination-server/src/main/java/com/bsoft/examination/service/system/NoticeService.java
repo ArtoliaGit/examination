@@ -8,7 +8,6 @@ import com.bsoft.examination.service.base.BaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -18,8 +17,11 @@ import java.util.Map;
 @Service
 public class NoticeService extends BaseService<Notice, NoticeMapper> {
 
-    @Resource
-    private NoticeMapper noticeMapper;
+    private final NoticeMapper noticeMapper;
+
+    public NoticeService(NoticeMapper noticeMapper) {
+        this.noticeMapper = noticeMapper;
+    }
 
     /**
      * 获取提示信息列表

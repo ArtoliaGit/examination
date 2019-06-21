@@ -21,7 +21,7 @@ export default {
   /**
    * @description 配置显示在浏览器标签的title
    */
-  title: 'examination',
+  title: 'examination-admin',
   /**
    * @description 超级管理员角色
    */

@@ -48,8 +48,13 @@ public class User implements UserDetails {
     /**
      * 用户状态 1:正常 0:作废
      */
-    @TableLogic
     private String status;
+
+    /**
+     * 作废时间
+     */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date disableTime;
 
     /**
      * 维护时间

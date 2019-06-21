@@ -4,14 +4,14 @@
       <side-menu :menu-list="menuList" :is-collapse="isCollapse" />
     </el-aside>
     <el-container class="main-container">
-      <el-header>
+      <el-header style="box-shadow: 0px 2px 5px #b9b5b5;">
         <header-bar
           :is-collapse="isCollapse"
           @on-collapse="handleCollapse"
         />
       </el-header>
       <el-container style="overflow: hide;">
-        <el-header height="40px" style="padding: 0;">
+        <!-- <el-header height="40px" style="padding: 0;">
           <div class="tag-nav-wrapper">
             <tags-nav
               :value="$route"
@@ -20,7 +20,7 @@
               @on-close="handleCloseTag"
             />
           </div>
-        </el-header>
+        </el-header> -->
         <el-main>
           <transition name="fade-transform" mode="out-in">
             <keep-alive :include="cacheList">
@@ -101,9 +101,6 @@ export default {
       let { name, params, query } = {};
       if (typeof route === 'string') name = route;
       else {
-        // name = route.name;
-        // params = route.params;
-        // query = route.query;
         ({ name, params, query } = route);
       }
       if (name.indexOf('isTurnByHref_') > -1) {

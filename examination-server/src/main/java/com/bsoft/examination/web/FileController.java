@@ -2,24 +2,19 @@ package com.bsoft.examination.web;
 
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.bsoft.examination.domain.ExcelDemo;
-import com.bsoft.examination.service.test.TestService;
-import com.bsoft.examination.util.RequestParamPaser;
 import com.bsoft.examination.util.WordUtil;
 import com.bsoft.examination.util.excel.ExcelStyleHandler;
 import com.bsoft.examination.util.excel.ExcelUtil;
 import com.bsoft.examination.util.excel.ExcelWriterFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -27,18 +22,13 @@ import java.util.*;
 /**
  * @author Artolia Pendragon
  * @version 1.0.0
- * @Description TODO
- * @createTime 2019年05月12日 11:11:00
  */
 @RestController
 @RequestMapping("file")
 public class FileController {
 
-    @Autowired
-    private TestService testService;
-
     @PostMapping
-    public String upload(MultipartFile file) throws Exception {
+    public String upload(MultipartFile file) {
         System.out.println(file.getName());
         System.out.println(file.getOriginalFilename());
         System.out.println(file.getSize());
@@ -50,11 +40,9 @@ public class FileController {
     }
 
     @GetMapping("/excel")
-    public void downloadExcel(HttpServletRequest request, HttpServletResponse response) {
+    public void downloadExcel(HttpServletResponse response) {
         List<ExcelDemo> list = getList();
         String fileName = "一个 Excel 文件";
-        String sheetName = "第一个 sheet";
-        Map<String, Object> params = RequestParamPaser.getParameters(request);
         ExcelWriterFactory writer = ExcelUtil.writeExcel(response, fileName, ExcelTypeEnum.XLS, new ExcelStyleHandler());
         writer.write(list, "测试", new ExcelDemo());
         writer.write(list, "测试2", new ExcelDemo());
@@ -78,8 +66,6 @@ public class FileController {
             fis.close();
 
             dataMap.put("image", Base64.getEncoder().encodeToString(data));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,7 +82,7 @@ public class FileController {
 
         Random r = new Random();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS");
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(sdf1.format(new Date()));
         sb.append("_");
         sb.append(r.nextInt(100));

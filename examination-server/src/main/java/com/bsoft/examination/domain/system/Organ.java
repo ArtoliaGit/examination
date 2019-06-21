@@ -32,6 +32,11 @@ public class Organ {
     private String organname;
 
     /**
+     * 机构简码
+     */
+    private String organShortCode;
+
+    /**
      * 数据库名
      */
     private String name;

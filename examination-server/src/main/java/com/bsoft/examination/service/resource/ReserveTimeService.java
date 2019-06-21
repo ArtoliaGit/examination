@@ -8,7 +8,6 @@ import com.bsoft.examination.service.base.BaseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -18,8 +17,11 @@ import java.util.Map;
 @Service
 public class ReserveTimeService extends BaseService<ReserveTime, ReserveTimeMapper> {
 
-    @Resource
-    private ReserveTimeMapper reserveTimeMapper;
+    private final ReserveTimeMapper reserveTimeMapper;
+
+    public ReserveTimeService(ReserveTimeMapper reserveTimeMapper) {
+        this.reserveTimeMapper = reserveTimeMapper;
+    }
 
     /**
      * 获取预约时段列表
@@ -29,6 +31,7 @@ public class ReserveTimeService extends BaseService<ReserveTime, ReserveTimeMapp
         String pageNum = (String) params.get("page");
         String pageSize = (String) params.get("pageSize");
         Page<ReserveTime> page = new Page<>(1, 10);
+        page.setAsc("start_time");
 
         if (StringUtils.isNoneBlank(pageNum, pageNum)) {
             page.setCurrent(Long.parseLong(pageNum));

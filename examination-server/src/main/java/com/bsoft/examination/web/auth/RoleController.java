@@ -3,7 +3,6 @@ package com.bsoft.examination.web.auth;
 import com.bsoft.examination.domain.auth.Role;
 import com.bsoft.examination.service.auth.RoleService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +17,11 @@ import java.util.Map;
 @RequestMapping("role")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     /**
      * 获取角色列表
