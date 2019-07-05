@@ -6,6 +6,7 @@ import com.bsoft.examination.util.RequestParamPaser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 部位信息controller
@@ -28,6 +29,7 @@ public class LimbController {
      */
     @PostMapping("/save")
     public String save(@RequestBody Limb limb) {
+        limb.setCreateTime(new Date());
         return limbService.saveOrUpdate(limb).toJson();
     }
 
@@ -49,5 +51,15 @@ public class LimbController {
     @GetMapping("/delete")
     public String delete(String id) {
         return limbService.removeById(id).toJson();
+    }
+
+    /**
+     * 根据检查项目获取部位
+     * @param checkItem 检查项目
+     * @return String
+     */
+    @GetMapping("/getListByCheckItem")
+    public String getListByCheckItem(String checkItem) {
+        return limbService.getListByCheckItem(checkItem).toJson();
     }
 }

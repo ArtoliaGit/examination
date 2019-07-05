@@ -74,7 +74,7 @@
             <el-form-item label="检查项目" prop="cid" :label-width="labelWidth">
               <el-select v-model="form.cid">
                 <el-option
-                  v-for="item in checkItemDic"
+                  v-for="item in checkItemDic.filter(x => x.status === '1')"
                   :key="item.key"
                   :label="item.text"
                   :value="item.key"
@@ -211,6 +211,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form).then((res) => {
             if (res.code === 200) {
               this.$message({
@@ -235,7 +237,7 @@ export default {
       });
     },
     handleDelete(val) {
-      remove(val).then((res) => {
+      remove({ id: val.lid }).then((res) => {
         if (res.code === 200) {
           this.$message({
             type: 'success',
@@ -260,7 +262,7 @@ export default {
         if (res.code === 200) {
           const { data } = res;
           if (data.length > 0) {
-            this.checkItemDic = data.map(item => ({ key: item.code, text: item.name }));
+            this.checkItemDic = data.map(item => ({ key: item.code, text: item.name, status: item.status }));
           }
         }
       });

@@ -3,9 +3,12 @@
 <mapper namespace="com.bsoft.examination.mapper.resource.CheckItemMapper">
 
     <select id="getDays" parameterType="string"
-            resultType="int">
-        select days from CheckItem
-        where code = #{code,jdbcType=VARCHAR}
+            resultType="Integer">
+        select max(days) from CheckItem
+        where code in
+            <foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
           and status = '1'
     </select>
 </mapper>

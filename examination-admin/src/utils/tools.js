@@ -56,7 +56,7 @@ export function formatTime(date, pattern) {
     result = result.replace(/MM/g, (Array(2).join('0') + month).slice(-2));
   }
   if (pattern.includes('M')) {
-    result = result.replace(/MM/g, month);
+    result = result.replace(/M/g, month);
   }
   if (pattern.includes('dd')) {
     result = result.replace(/dd/g, (Array(2).join('0') + day).slice(-2));
@@ -90,4 +90,12 @@ export function formatTime(date, pattern) {
   }
 
   return result;
+}
+
+/**
+ * 获取星期几
+ */
+export function getWeek() {
+  const day = new Date().getDay();
+  return `星期${'日一二三四五六'.charAt(day)}`;
 }

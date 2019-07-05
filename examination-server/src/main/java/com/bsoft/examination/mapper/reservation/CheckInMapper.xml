@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bsoft.examination.mapper.reservation.ReserveMapper">
+<mapper namespace="com.bsoft.examination.mapper.reservation.CheckInMapper">
 
-    <select id="getReservePersonInfo" resultType="map">
-        select *
-        from VI_YJJCYYQDJH
+
+    <select id="getList" resultType="CheckIn">
+        select * from yy_bdb
         <where>
-            <if test='applyNo != null and applyNo != ""'>
-                <choose>
-                    <when test='type == "1"'>
-                        and SQDH = #{applyNo}
-                    </when>
-                    <when test='type == "2"'>
-                        and MZHM = #{applyNo} and MZBZ = '门诊'
-                    </when>
-                    <when test='type == "3"'>
-                        and MZHM = #{applyNo} and MZBZ = '住院'
-                    </when>
-                </choose>
+            <if test='checkItem != null and checkItem != ""'>
+                and code = #{checkItem}
             </if>
+            <if test='jhzt != null and jhzt != ""'>
+                and jhzt = #{jhzt}
+            </if>
+            <if test='jhzt == null or jhzt == ""'>
+                and (jhzt = '' or jhzt is null)
+            </if>
+            and bdsj &gt; cast(#{startDate} as datetime)
+            and bdsj &lt; cast(#{endDate} as datetime)
         </where>
     </select>
-    <select id="getMaxId" resultType="java.lang.String">
-        select max(id) from reserve where id like #{date} + '%'
+    <select id="getAlwaysCallList" resultType="CheckIn">
+        select a.*, b.address from yy_bdb a left join CheckItem b on a.code = b.code
+        <where>
+            <if test='jhzt != null and jhzt != ""'>
+                and jhzt = #{jhzt}
+            </if>
+            and bdsj &gt; cast(#{startDate} as datetime)
+            and bdsj &lt; cast(#{endDate} as datetime)
+        </where>
+        order by jhsj
     </select>
-    <update id="updateStatus">
-        update reserve set status = '1' where id = #{id}
-    </update>
 </mapper>

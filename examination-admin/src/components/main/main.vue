@@ -47,7 +47,7 @@ export default {
   components: {
     SideMenu,
     HeaderBar,
-    TagsNav,
+    // TagsNav,
   },
   data() {
     return {

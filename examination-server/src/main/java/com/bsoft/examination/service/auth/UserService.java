@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.Map;
 @Service("userService")
 public class UserService implements UserDetailsService {
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     private final UserInfo userInfo;
 
@@ -105,23 +106,24 @@ public class UserService implements UserDetailsService {
         Result<User> result = new Result<>();
         try {
             final String username = user.getUsername();
-
+            user.setCreateTime(new Date());
             if ("create".equals(op)) {
                 if (userMapper.findByUsername(username) != null) {
                     result.setCode(HttpStatus.NO_CONTENT);
                     result.setMessage("用户名已存在");
                     return result;
                 }
-                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-                final String password = user.getPassword();
-                user.setPassword(encoder.encode(password));
+//                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//                final String password = user.getPassword();
+//                user.setPassword(encoder.encode(password));
                 user.setCreateUser(userInfo.getUsername());
                 user.setUserId(UUIDUtil.generateTimeUUID());
                 userMapper.save(user);
             } else {
                 userMapper.updateById(user);
             }
-
+            userMapper.deleteRoles(user);
+            userMapper.saveRoles(user);
             result.setCode(HttpStatus.OK);
             result.setMessage("保存成功");
             result.setData(user);
@@ -129,6 +131,29 @@ public class UserService implements UserDetailsService {
             e.printStackTrace();
             result.setCode(HttpStatus.INTERNAL_SERVER_ERROR);
             result.setMessage("服务错误");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //手动回滚事务
+        }
+        return result;
+    }
+
+    /**
+     * 修改密码
+     * @param user 用户实体
+     * @return Result
+     */
+    public Result updatePassword(User user) {
+        Result result = new Result();
+        try {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            final String password = user.getPassword();
+            user.setPassword(encoder.encode(password));
+            userMapper.updateById(user);
+            result.setCode(HttpStatus.OK);
+            result.setMessage("更新成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            result.setMessage("更新失败");
         }
         return result;
     }
@@ -146,6 +171,9 @@ public class UserService implements UserDetailsService {
             user.setUserId(userId);
             user.setStatus("0");
             user.setDisableTime(new Date());
+            user.setCreateTime(new Date());
+            user.setCreateUser(userInfo.getUsername());
+            user.setCreateUnit(userInfo.getOrgan());
             userMapper.updateById(user);
             result.setCode(HttpStatus.OK);
             result.setMessage("删除成功");

@@ -2,4 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bsoft.examination.mapper.resource.ReserveResourceMapper">
 
+    <select id="getReserveResourceByCheckItem" resultType="map">
+        select a.id, a.reserve_date, a.time_slot, a.total_limit, a.available_limit,a.check_item
+            ,b.start_time,b.end_time,c.name,b.start_time+'-'+b.end_time time_slot_se,c.dept,c.way
+        from ReserveResource a left join ReserveTime b on a.time_slot = b.id
+            left join CheckItem c on a.check_item = c.code
+        where a.check_item in
+            <foreach collection="checkItems" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+          and a.reserve_date = cast(#{reserveDate} as datetime)
+            order by b.start_time
+    </select>
 </mapper>

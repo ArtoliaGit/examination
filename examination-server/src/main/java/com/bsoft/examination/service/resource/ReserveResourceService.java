@@ -12,6 +12,7 @@ import com.bsoft.examination.mapper.resource.CheckItemMapper;
 import com.bsoft.examination.mapper.resource.ReserveResourceMapper;
 import com.bsoft.examination.mapper.resource.ReserveTimeMapper;
 import com.bsoft.examination.service.base.BaseService;
+import com.bsoft.examination.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,12 +76,12 @@ public class ReserveResourceService extends BaseService<ReserveResource, Reserve
     public Result getTableList(String checkItem) {
         Result<Map<String, Object>> result = new Result<>();
         try {
-            int days = checkItemMapper.getDays(checkItem);
+            int days = checkItemMapper.getDays(new String[]{checkItem});
             LocalDate localDate = LocalDate.now();
             List<Map<String, Object>> headers = new ArrayList<>();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("M.d");
-            for (int i = 1; i <= days; i++) {
+            for (int i = 0; i <= days; i++) {
                 Map<String, Object> map = new HashMap<>();
                 LocalDate plusDate = localDate.plusDays(i);
                 String strPlusDate = plusDate.format(formatter);
@@ -116,11 +117,13 @@ public class ReserveResourceService extends BaseService<ReserveResource, Reserve
 
             QueryWrapper<ReserveResource> wrapper = new QueryWrapper<>();
             wrapper.eq("check_item", checkItem);
+            wrapper.gt("reserve_date", DateUtil.localDate2Date(LocalDate.now().plusDays(-1)));
             List<ReserveResource> resources = reserveResourceMapper.selectList(wrapper);
 
             QueryWrapper<ReserveTime> timeQueryWrapper = new QueryWrapper<>();
             timeQueryWrapper.orderByAsc("start_time");
             List<ReserveTime> times = reserveTimeMapper.selectList(timeQueryWrapper);
+
             List<Map<String, Object>> resourceList = times.parallelStream().map(
                     item -> {
                         Map<String, Object> map = new HashMap<>();
@@ -183,6 +186,26 @@ public class ReserveResourceService extends BaseService<ReserveResource, Reserve
                 reserveResourceMapper.insert(reserveResource);
             }
         }
+    }
+
+    /**
+     * 根据条件获取预约资源
+     * @param params 参数
+     * @return Result
+     */
+    public Result getResourceByConditions(Map<String, Object> params) {
+        Result<List<ReserveResource>> result = new Result<>();
+        try {
+            List<ReserveResource> list = reserveResourceMapper.selectByMap(params);
+            result.setCode(HttpStatus.OK);
+            result.setData(list);
+            result.setMessage("查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            result.setMessage("服务错误");
+        }
+        return result;
     }
 
     @Override

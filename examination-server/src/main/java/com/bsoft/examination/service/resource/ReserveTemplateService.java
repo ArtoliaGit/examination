@@ -174,7 +174,7 @@ public class ReserveTemplateService extends BaseService<ReserveTemplate, Reserve
         Result result = new Result();
         try {
             List<ReserveTemplate> list = reserveTemplateMapper.getUnInitReserveResource(checkItem);
-            int days = checkItemMapper.getDays(checkItem);
+            int days = checkItemMapper.getDays(new String[]{checkItem});
             List<ReserveResource> initList = new ArrayList<>(30);
 
             LocalDate now = LocalDate.now();
@@ -193,20 +193,26 @@ public class ReserveTemplateService extends BaseService<ReserveTemplate, Reserve
                     return reserveResource;
                 }).collect(Collectors.toList()));
             }
-            boolean successFlag = reserveResourceService.saveOrUpdateBatch(initList, 100);
-            if (successFlag) {
-                Date initDate = new Date();
-                list = list.parallelStream().peek(item -> {
-                    item.setInitFlag("1");
-                    item.setInitDate(initDate);
-                }).collect(Collectors.toList());
-                saveOrUpdateBatch(list, 100);
-                result.setCode(HttpStatus.OK);
-                result.setMessage("初始化成功");
+            if (initList.size() == 0) {
+                result.setCode(HttpStatus.NO_CONTENT);
+                result.setMessage("没有数据需要初始化");
             } else {
-                result.setCode(HttpStatus.INTERNAL_SERVER_ERROR);
-                result.setMessage("初始化失败");
+                boolean successFlag = reserveResourceService.saveOrUpdateBatch(initList, 100);
+                if (successFlag) {
+                    Date initDate = new Date();
+                    list = list.parallelStream().peek(item -> {
+                        item.setInitFlag("1");
+                        item.setInitDate(initDate);
+                    }).collect(Collectors.toList());
+                    saveOrUpdateBatch(list, 100);
+                    result.setCode(HttpStatus.OK);
+                    result.setMessage("初始化成功");
+                } else {
+                    result.setCode(HttpStatus.INTERNAL_SERVER_ERROR);
+                    result.setMessage("初始化失败");
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             result.setCode(HttpStatus.INTERNAL_SERVER_ERROR);

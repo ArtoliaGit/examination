@@ -49,16 +49,9 @@
           <el-table-column label="维护人" prop="createUser" sortable />
           <el-table-column label="维护时间" prop="createTime" sortable />
           <el-table-column label="维护机构" prop="createUnit" :formatter="getOrganDic" sortable />
-          <el-table-column label="操作" align="center" width="200">
+          <el-table-column label="操作" align="center" width="100">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="handleDelete(scope.row.userId)"
-              >
-                删除
-              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -88,7 +81,7 @@
         <el-form-item label="用户名" prop="username" :label-width="labelWidth">
           <el-input type="string" v-model="form.username" style="width: 50%;" />
         </el-form-item>
-        <el-form-item label="密码" prop="password" :label-width="labelWidth" v-if="op === 'create'">
+        <el-form-item label="密码" prop="password" :label-width="labelWidth">
           <el-input v-model="form.password" type="password" style="width: 50%;" />
         </el-form-item>
         <el-form-item label="所属机构" prop="organcode" :label-width="labelWidth">
@@ -102,12 +95,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="角色" prop="roles" :label-width="labelWidth">
-          <el-select v-model="form.roles" multiple style="width: 50%;">
+          <el-select v-model="form.roles" multiple multiple-limit="1" style="width: 50%;">
             <el-option
               v-for="item in roleDic"
               :key="item.roleId"
               :label="item.roleDescription"
               :value="item.roleId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="status" :label-width="labelWidth">
+          <el-select v-model="form.status">
+            <el-option
+              v-for="item in statusDic"
+              :key="item.key"
+              :label="item.text"
+              :value="item.key"
             />
           </el-select>
         </el-form-item>
@@ -125,6 +128,7 @@ import {
   getUserList,
   save,
   deleteUser,
+  updatePassword,
 } from '@/api/user';
 import {
   getRoleList,
@@ -215,6 +219,7 @@ export default {
         organcode: '',
         organtype: '',
         roles: [],
+        status: '1',
         createTime: '',
         createUser: this.$store.state.user.userName,
         createUnit: this.$store.state.user.organ,
@@ -222,10 +227,11 @@ export default {
     },
     handleSave() {
       const data = this.form;
-      data.status = '1';
       data.roles = this.form.roles.map(item => ({ roleId: item }));
       this.$refs.form.validate((valid) => {
         if (valid) {
+          data.createUser = this.$store.state.user.userName;
+          data.createUnit = this.$store.state.user.organ;
           save(data, { op: this.op }).then((res) => {
             if (res.code === 200) {
               this.$message({
@@ -253,6 +259,7 @@ export default {
       this.form.password = val.password;
       this.form.organcode = val.organcode;
       this.form.organtype = val.organtype;
+      this.form.status = val.status;
       this.form.roles = val.roles.map(item => item.roleId);
       this.form.createTime = val.createTime;
       this.form.createUser = val.createUser;
@@ -266,7 +273,7 @@ export default {
         if (res.code === 200) {
           this.$message({
             type: 'success',
-            message: '删除成功',
+            message: '禁用成功',
           });
         }
         this.getTableData();
@@ -312,12 +319,16 @@ export default {
     },
   },
   mounted() {
-    this.getTableData();
     this.getRoleDic();
     this.setOrganDic();
+    this.getTableData();
     window.onresize = () => {
       this.maxHeight = window.innerHeight - 210;
     };
+  },
+  activated() {
+    this.getRoleDic();
+    this.setOrganDic();
   },
 };
 </script>

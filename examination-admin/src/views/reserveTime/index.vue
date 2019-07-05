@@ -41,18 +41,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="page.page"
-          :page-size="page.pageSize"
-          :page-sizes="page.pageSizes"
-          :total="page.total"
-          background
-          layout="total, sizes, prev, pager, next, jumper, slot"
-        >
-          <el-button size="mini" icon="el-icon-refresh" @click="refresh" plain>刷新</el-button>
-        </el-pagination>
       </el-row>
     </el-card>
 
@@ -119,16 +107,48 @@ import {
 export default {
   name: 'CheckItem',
   data() {
+    const startTimeRule = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('不能为空'));
+      } else if (this.form.startTime
+        && this.form.endTime
+        && this.form.startTime >= this.form.endTime) {
+        callback(new Error('开始时间不能大于结束时间'));
+      } else if (this.tableData.some(item => value >= item.startTime && value <= item.endTime)) {
+        callback(new Error('预约时段冲突'));
+      }
+      callback();
+    };
+    const endTimeRule = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('不能为空'));
+      } else if (this.form.startTime
+        && this.form.endTime
+        && this.form.startTime >= this.form.endTime) {
+        callback(new Error('结束时间不能小于开始时间'));
+      } else if (this.tableData.some(item => value >= item.startTime && value <= item.endTime)) {
+        callback(new Error('预约时段冲突'));
+      }
+      callback();
+    };
+    const timeSequenceRule = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('不能为空'));
+      } else if (this.tableData.some(item => item.timeSequence === value)) {
+        callback(new Error('预约时段序列重复'));
+      }
+      callback();
+    };
     return {
       tableData: [],
       page: {
         page: 1,
-        pageSize: 10,
+        pageSize: 10000,
         total: 0,
         pageSizes: [10, 20, 30, 40, 50],
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 210,
+      maxHeight: window.innerHeight - 170,
       labelWidth: '120px',
       title: '新建',
       dialogFormVisible: false,
@@ -142,22 +162,14 @@ export default {
         createUnit: '',
       },
       rules: {
-        startTime: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        endTime: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        timeSequence: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        startTime: [{ validator: startTimeRule, trigger: 'blur' }],
+        endTime: [{ validator: endTimeRule, trigger: 'blur' }],
+        timeSequence: [{ validator: timeSequenceRule, trigger: 'change' }],
       },
       timeSequenceDic: [],
     };
   },
   methods: {
-    handleSizeChange(val) {
-      this.page.pageSize = val;
-      this.getTableData();
-    },
-    handleCurrentChange(val) {
-      this.page.page = val;
-      this.getTableData();
-    },
     refresh() {
       this.getTableData();
     },
@@ -217,6 +229,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form).then((res) => {
             if (res.code === 200) {
               this.$message({
@@ -265,13 +279,14 @@ export default {
       for (let i = 0; i < 26; i++) {
         this.timeSequenceDic.push(String.fromCharCode(65 + i));
       }
+      this.timeSequenceDic.splice(21, 1);
     },
   },
   mounted() {
     this.getTimeSequence();
     this.getTableData();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 210;
+      this.maxHeight = window.innerHeight - 170;
     };
   },
 };

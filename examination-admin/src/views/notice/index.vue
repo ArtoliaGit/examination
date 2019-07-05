@@ -25,7 +25,7 @@
           size="small"
           @row-dblclick="handleEdit"
         >
-          <el-table-column label="类型" prop="type" width="60" />
+          <el-table-column label="类型" prop="type" :formatter="getTypeDic" width="60" />
           <el-table-column label="检查项目" prop="checkItem" :formatter="getCheckItemDic" width="100" />
           <el-table-column label="提示信息" prop="info" />
           <el-table-column label="排序" prop="ord" width="60" />
@@ -69,14 +69,21 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="类型" prop="type" :label-width="labelWidth">
-              <el-input type="string" v-model="form.type" />
+              <el-select v-model="form.type">
+                <el-option
+                  v-for="item in typeDic"
+                  :key="item.key"
+                  :label="item.text"
+                  :value="item.key"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="检查项目" prop="checkItem" :label-width="labelWidth">
               <el-select v-model="form.checkItem">
                 <el-option
-                  v-for="item in checkItemDic"
+                  v-for="item in checkItemDic.filter(x => x.status === '1')"
                   :key="item.key"
                   :label="item.text"
                   :value="item.key"
@@ -89,6 +96,18 @@
           <el-col :span="12">
             <el-form-item label="排序" prop="ord" :label-width="labelWidth">
               <el-input v-model.number="form.ord" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status" :label-width="labelWidth">
+              <el-select v-model="form.status">
+                <el-option
+                  v-for="item in statusDic"
+                  :key="item.key"
+                  :label="item.text"
+                  :value="item.key"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -155,6 +174,10 @@ export default {
       statusDic: [
         { key: '1', text: '正常' },
         { key: '0', text: '作废' },
+      ],
+      typeDic: [
+        { key: '1', text: '预约条' },
+        { key: '2', text: '报到条' },
       ],
       checkItemDic: [],
     };
@@ -229,6 +252,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form).then((res) => {
             if (res.code === 200) {
               this.$message({
@@ -285,13 +310,20 @@ export default {
         if (res.code === 200) {
           const { data } = res;
           if (data.length > 0) {
-            this.checkItemDic = data.map(item => ({ key: item.code, text: item.name }));
+            this.checkItemDic = data.map(item => ({ key: item.code, text: item.name, status: item.status }));
           }
         }
       });
     },
     getCheckItemDic(row, column, cellValue, index) {
       const result = this.checkItemDic.filter(item => cellValue === item.key);
+      if (result.length > 0) {
+        return result[0].text;
+      }
+      return '';
+    },
+    getTypeDic(row, column, cellValue, index) {
+      const result = this.typeDic.filter(item => cellValue === item.key);
       if (result.length > 0) {
         return result[0].text;
       }

@@ -2,10 +2,9 @@ export default {
   /**
    * @description api请求基础路径
    */
-  baseUrl: {
-    dev: '/api',
-    pro: '',
-  },
+  baseUrl: process.env.NODE_ENV === 'production'
+    ? ''
+    : '/api',
   /**
    * @description token在Cookie中存储的天数，默认1天
    */

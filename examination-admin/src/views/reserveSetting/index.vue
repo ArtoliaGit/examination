@@ -52,6 +52,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form).then((res) => {
             if (res.code === 200) {
               this.$message({

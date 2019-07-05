@@ -17,3 +17,9 @@ export const remove = params => axios.request({
   params,
   method: 'get',
 });
+
+export const getListByCheckItem = params => axios.request({
+  url: '/limb/getListByCheckItem',
+  params,
+  method: 'get',
+});

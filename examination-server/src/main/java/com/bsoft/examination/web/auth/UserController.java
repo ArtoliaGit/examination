@@ -57,6 +57,16 @@ public class UserController {
     }
 
     /**
+     * 更新密码
+     * @param user 用户实体
+     * @return String
+     */
+    @PostMapping("/updatePassword")
+    public String updatePassword(@RequestBody User user) {
+        return userService.updatePassword(user).toJson();
+    }
+
+    /**
      * 删除用户
      * @param userId 用户id
      * @return String

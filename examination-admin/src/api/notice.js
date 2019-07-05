@@ -17,3 +17,9 @@ export const deleteNotice = params => axios.request({
   params,
   method: 'get',
 });
+
+export const list = params => axios.request({
+  url: '/notice/list',
+  params,
+  method: 'get',
+});

@@ -33,6 +33,8 @@ public class DateUtil {
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zdt = localDate.atStartOfDay(zoneId);
 
+        System.out.println(Date.from(zdt.toInstant()));
         return Date.from(zdt.toInstant());
     }
+
 }

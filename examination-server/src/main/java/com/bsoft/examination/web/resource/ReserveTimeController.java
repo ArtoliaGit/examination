@@ -6,6 +6,7 @@ import com.bsoft.examination.util.RequestParamPaser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 预约时段controller
@@ -27,6 +28,7 @@ public class ReserveTimeController {
      */
     @PostMapping("/save")
     public String save(@RequestBody ReserveTime reserveTime) {
+        reserveTime.setCreateTime(new Date());
         return reserveTimeService.saveOrUpdate(reserveTime).toJson();
     }
 

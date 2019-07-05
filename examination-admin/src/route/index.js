@@ -21,7 +21,7 @@ NProgress.configure({ showSpinner: false });
 
 const router = new Router({
   routes,
-  mode: 'history',
+  // mode: 'history',
 });
 
 const LOGIN_PAGE_NAME = 'login';
@@ -37,7 +37,9 @@ const turnTo = (to, access, next) => {
 router.beforeEach((to, from, next) => {
   NProgress.start();
   const token = getToken();
-  if (!token && to.name !== LOGIN_PAGE_NAME) {
+  if (to.name === 'Information') {
+    next();
+  } else if (!token && to.name !== LOGIN_PAGE_NAME) {
     next({
       name: LOGIN_PAGE_NAME,
     });

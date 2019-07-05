@@ -22,6 +22,8 @@ module.exports = {
     'consistent-return': 'off',
     'max-len': 'off',
     'no-unused-vars': 'off',
+    'no-plusplus': 'off',
+    'no-return-assign': 'off',
   },
 
   parserOptions: {

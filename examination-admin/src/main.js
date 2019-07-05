@@ -6,8 +6,10 @@ import App from './App.vue';
 import router from './route';
 import store from './store';
 import config from './config';
+import Print from './utils/print';
 
 Vue.use(ElementUI);
+Vue.use(Print);
 
 Vue.config.productionTip = false;
 

@@ -14,5 +14,5 @@ public interface CheckItemMapper extends BaseMapper<CheckItem> {
      * @param code 检查项目code
      * @return int
      */
-    int getDays(String code);
+    Integer getDays(String[] code);
 }

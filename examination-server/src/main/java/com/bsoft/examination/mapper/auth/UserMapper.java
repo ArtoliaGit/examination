@@ -35,4 +35,16 @@ public interface UserMapper extends BaseMapper<User> {
      */
     IPage<User> getUserList(Page page, @Param("params") Map<String, Object> map);
 
+    /**
+     * 保存用户角色
+     * @param user 用户
+     * @return int
+     */
+    int saveRoles(User user);
+
+    /**
+     * 删除用户角色
+     */
+    int deleteRoles(User user);
+
 }

@@ -39,6 +39,7 @@
           header-row-class-name="table-header"
           v-loading="tableLoading"
           size="small"
+          stripe
         >
           <el-table-column
             label="预约时段"
@@ -55,7 +56,22 @@
             width="100"
           >
             <template slot-scope="scope">
-              <el-input v-model="scope.row[item.field]" size="mini" />
+              <el-popover
+                placement="top"
+                title="提示"
+                width="150"
+                trigger="focus"
+                :content="showText"
+                @show="handleShow(scope)"
+              >
+                <el-input
+                  slot="reference"
+                  :ref="`input${scope.$index}${item.field}`"
+                  v-model="scope.row[item.field]"
+                  size="mini"
+                  @blur="handleBlur(scope)"
+                />
+              </el-popover>
             </template>
           </el-table-column>
         </el-table>
@@ -68,12 +84,13 @@
 import {
   getTableList,
   batchSave,
+  getResourceByConditions,
 } from '@/api/reserveResource';
 import { getAllList as getCheckItemList } from '@/api/checkItem';
 import { getAllList as getReserveTimeList } from '@/api/reserveTime';
 
 export default {
-  name: 'ReserveTemplate',
+  name: 'ReserveResource',
   data() {
     return {
       tableData: [],
@@ -81,11 +98,15 @@ export default {
         checkItem: '',
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 210,
+      maxHeight: window.innerHeight - 170,
       checkItemDic: [],
       reserveTimeDic: [],
       headers: [],
       weekDic: ['', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+      totalLimit: 0,
+      availableLimit: 0,
+      showText: '加载中...',
+      isValidate: true,
     };
   },
   methods: {
@@ -109,12 +130,20 @@ export default {
       this.getTableData();
     },
     handleSave() {
+      if (!this.isValidate) {
+        this.$message({
+          type: 'error',
+          message: '不能保存',
+        });
+        return;
+      }
       const list = this.tableData.map(
         item => Object.entries(item).filter(x => x[0] !== 'timeSlot').map(
           y => ({
             timeSlot: item.timeSlot,
             reserveDate: y[0].substr(5, y[0].length),
             totalLimit: parseInt(y[1], 10),
+            availableLimit: parseInt(y[1], 10),
             checkItem: this.query.checkItem,
           }),
         ),
@@ -140,7 +169,7 @@ export default {
       });
     },
     setCheckItemDic() {
-      getCheckItemList().then((res) => {
+      getCheckItemList({ status: '1' }).then((res) => {
         if (res.code === 200) {
           const { data } = res;
           if (data.length > 0) {
@@ -175,12 +204,47 @@ export default {
       }
       return '';
     },
+    handleShow(scope) {
+      const { row, column } = scope;
+      const params = {
+        time_slot: row.timeSlot,
+        reserve_date: column.property.substr(5),
+        check_item: this.query.checkItem,
+      };
+      this.showText = '加载中...';
+      getResourceByConditions(params).then((res) => {
+        if (res.code === 200 && res.data.length > 0) {
+          this.totalLimit = res.data[0].totalLimit;
+          this.availableLimit = res.data[0].availableLimit;
+          this.showText = `已用限额${this.totalLimit - this.availableLimit}, 可用限额${this.availableLimit}`;
+        }
+      });
+    },
+    handleBlur(scope) {
+      const { row, column } = scope;
+      if (column.property && row[column.property] < this.totalLimit - this.availableLimit) {
+        this.$message.closeAll();
+        this.$message({
+          type: 'error',
+          message: '不能修改',
+          duration: 2000,
+        });
+        this.isValidate = false;
+        this.$refs[`input${scope.$index}${column.property}`][0].focus();
+        this.$refs[`input${scope.$index}${column.property}`][0].$el.style.border = '1px solid red';
+        this.$refs[`input${scope.$index}${column.property}`][0].$el.style.borderRadius = '4px';
+      } else {
+        this.isValidate = true;
+        this.$refs[`input${scope.$index}${column.property}`][0].$el.style.border = '';
+        this.$refs[`input${scope.$index}${column.property}`][0].$el.style.borderRadius = '';
+      }
+    },
   },
   mounted() {
     this.setCheckItemDic();
     this.setReserveTimeDic();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 210;
+      this.maxHeight = window.innerHeight - 170;
     };
   },
 };

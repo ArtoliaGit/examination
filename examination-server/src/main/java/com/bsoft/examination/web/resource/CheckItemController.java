@@ -7,6 +7,7 @@ import com.bsoft.examination.util.RequestParamPaser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 检查项目controller
@@ -29,6 +30,7 @@ public class CheckItemController {
      */
     @PostMapping("/save")
     public String save(@RequestBody CheckItem checkItem) {
+        checkItem.setCreateTime(new Date());
         return checkItemService.saveOrUpdate(checkItem).toJson();
     }
 
@@ -62,6 +64,21 @@ public class CheckItemController {
         if (way != null) {
             wrapper.eq("way", way);
         }
+        String status = request.getParameter("status");
+        if (status != null) {
+            wrapper.eq("status", status);
+        }
+
         return checkItemService.list(wrapper).toJson();
+    }
+
+    /**
+     * 根据条件获取检查项目
+     * @param request 请求
+     * @return String
+     */
+    @GetMapping("/getCheckItemByConditions")
+    public String getCheckItemByConditions(HttpServletRequest request) {
+        return checkItemService.getCheckItemByConditions(RequestParamPaser.getParameters(request)).toJson();
     }
 }

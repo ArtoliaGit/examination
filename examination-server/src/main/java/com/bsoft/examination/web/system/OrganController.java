@@ -60,4 +60,12 @@ public class OrganController {
     public String getAllList() {
         return organService.list().toJson();
     }
+
+    /**
+     * 根据条件获取机构
+     */
+    @GetMapping("/getOrganByConditions")
+    public String getOrganByConditions(HttpServletRequest request) {
+        return organService.getOrganList(RequestParamPaser.getParameters(request)).toJson();
+    }
 }

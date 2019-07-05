@@ -28,7 +28,7 @@ public class ReserveController {
      */
     @PostMapping("/save")
     public String save(@RequestBody Reserve reserve) {
-        return reserveService.saveOrUpdate(reserve).toJson();
+        return reserveService.save(reserve).toJson();
     }
 
     /**
@@ -49,5 +49,46 @@ public class ReserveController {
     @GetMapping("/delete")
     public String delete(String id) {
         return reserveService.removeById(id).toJson();
+    }
+
+    /**
+     * 获取可预约日期列表
+     * @param checkItem 检查项目
+     * @return String
+     */
+    @GetMapping("/getReserveCalendar")
+    public String getReserveCalendar(String checkItem) {
+        return reserveService.getReserveCalendar(checkItem).toJson();
+    }
+
+    /**
+     * 获取预约时段信息
+     * @param checkItem 检查项目
+     * @param reserveDate 预约日期
+     * @return String
+     */
+    @GetMapping("/getTimeSlot")
+    public String getTimeSlot(String checkItem, String reserveDate) {
+        return reserveService.getTimeSlot(checkItem, reserveDate).toJson();
+    }
+
+    /**
+     * 从his数据库获取预约信息
+     * @param applyNo 申请单号
+     * @return String
+     */
+    @GetMapping("/getReservePersonInfo")
+    public String getReservePersonInfo(String applyNo, String type) {
+        return reserveService.getReservePersonInfo(applyNo, type).toJson();
+    }
+
+    /**
+     * 退约
+     * @param id 预约号
+     * @return String
+     */
+    @GetMapping("/cancelReserve")
+    public String cancelReserve(String id) {
+        return reserveService.cancelReserve(id).toJson();
     }
 }

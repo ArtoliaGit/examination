@@ -1,12 +1,13 @@
 package com.bsoft.examination.web.system;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bsoft.examination.domain.system.Notice;
 import com.bsoft.examination.service.system.NoticeService;
 import com.bsoft.examination.util.RequestParamPaser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 提示信息维护
@@ -29,6 +30,7 @@ public class NoticeController {
      */
     @PostMapping("/save")
     public String save(@RequestBody Notice notice) {
+        notice.setCreateTime(new Date());
         return noticeService.saveOrUpdate(notice).toJson();
     }
 
@@ -50,5 +52,19 @@ public class NoticeController {
     @GetMapping("/delete")
     public String delete(String id) {
         return noticeService.removeById(id).toJson();
+    }
+
+    /**
+     * 获取注意事项
+     * @param checkItem 检查项目
+     * @return String
+     */
+    @GetMapping("/list")
+    public String list(String checkItem) {
+        QueryWrapper<Notice> wrapper = new QueryWrapper<>();
+        wrapper.eq("check_item", checkItem);
+        wrapper.eq("type", "1");
+        wrapper.orderByAsc("ord");
+        return noticeService.list(wrapper).toJson();
     }
 }

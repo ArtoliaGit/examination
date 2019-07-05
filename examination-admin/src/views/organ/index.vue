@@ -168,7 +168,7 @@ export default {
       if (!value) {
         return callback(new Error('不能为空'));
       }
-      const regex = new RegExp(/^((25[0-5]|2[0-4]?[0-9]?|1[0-9]?[0-9]?|0)\.){3}(25[0-5]|2[0-4]?[0-9]?|1[0-9]?[0-9]?|0)$/);
+      const regex = new RegExp(/^((25[0-5]|2[0-4]?[0-9]?|1[0-9]?[0-9]?|[3-9]?[0-9])\.){3}(25[0-5]|2[0-4]?[0-9]?|1[0-9]?[0-9]?|[3-9]?[0-9])$/);
       if (regex.test(value)) {
         callback();
       } else {
@@ -306,6 +306,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form, { op: this.op }).then((res) => {
             if (res.code === 200) {
               this.$message({

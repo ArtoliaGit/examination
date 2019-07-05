@@ -1,6 +1,7 @@
 package com.bsoft.examination.configuration.database;
 
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
+import com.bsoft.examination.common.auth.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class DsHisProcessor extends DsProcessor {
+
+    private final UserInfo userInfo;
+
+    public DsHisProcessor(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 
     @Override
     public boolean matches(String key) {
@@ -28,7 +35,8 @@ public class DsHisProcessor extends DsProcessor {
     @Override
     public String doDetermineDatasource(MethodInvocation invocation, String key) {
         log.info("=========================进入自定义处理器====================");
-
-        return "azsqwsfwzx";
+        String dbName = userInfo.getOrgan();
+        log.info("=========================数据库[{}]========================", dbName);
+        return dbName;
     }
 }

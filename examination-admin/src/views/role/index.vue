@@ -36,10 +36,15 @@
         >
           <el-table-column label="角色名" prop="roleName" />
           <el-table-column label="角色描述" prop="roleDescription" />
+          <el-table-column label="状态" prop="status">
+            <template slot-scope="scope">
+              {{ scope.row.status === '1' ? '正常' : '禁用' }}
+            </template>
+          </el-table-column>
           <el-table-column label="维护人" prop="createUser" />
           <el-table-column label="维护时间" prop="createTime" />
-          <el-table-column label="维护机构" prop="createUnit" />
-          <el-table-column label="操作" align="center" min-width="120">
+          <el-table-column label="维护机构" prop="createUnit" :formatter="getOrganDic" />
+          <el-table-column label="操作" align="center" width="200">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
               <el-button
@@ -48,13 +53,6 @@
                 @click="handleEditResource(scope.row)"
               >
                 菜单权限
-              </el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="handleDelete(scope.row.userId)"
-              >
-                删除
               </el-button>
             </template>
           </el-table-column>
@@ -87,6 +85,16 @@
         </el-form-item>
         <el-form-item label="角色描述" prop="roleDescription" :label-width="labelWidth">
           <el-input type="string" v-model="form.roleDescription" style="width: 50%;" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status" :label-width="labelWidth">
+          <el-select v-model="form.status">
+            <el-option
+              v-for="item in statusDic"
+              :key="item.key"
+              :label="item.text"
+              :value="item.key"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -128,6 +136,7 @@ import {
   deleteRole,
   saveResource,
 } from '@/api/role';
+import { getAllList } from '@/api/organ';
 
 export default {
   name: 'Role',
@@ -148,6 +157,7 @@ export default {
         roleId: '',
         roleName: '',
         roleDescription: '',
+        status: '1',
         createTime: '',
         createUser: '',
         createUnit: '',
@@ -165,6 +175,10 @@ export default {
       },
       defaultChecked: [],
       maxHeight: window.innerHeight - 210,
+      statusDic: [
+        { key: '0', text: '禁用' },
+        { key: '1', text: '正常' },
+      ],
     };
   },
   methods: {
@@ -196,6 +210,7 @@ export default {
         roleId: val.roleId,
         roleName: val.roleName,
         roleDescription: val.roleDescription,
+        status: val.status,
         createTime: val.createTime,
         createUser: val.createUser,
         createUnit: val.createUnit,
@@ -216,6 +231,7 @@ export default {
         roleId: '',
         roleName: '',
         roleDescription: '',
+        status: '1',
         createTime: '',
         createUser: this.$store.state.user.userName,
         createUnit: this.$store.state.user.organ,
@@ -232,6 +248,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form, { op: this.op }).then((res) => {
             if (res.code === 200) {
               this.$message({
@@ -313,9 +331,27 @@ export default {
       filterResource(menuList);
       return changeResource;
     },
+    setOrganDic() {
+      getAllList().then((res) => {
+        if (res.code === 200) {
+          const { data } = res;
+          if (data.length > 0) {
+            this.organDic = data.map(item => ({ key: item.organcode, text: item.organname }));
+          }
+        }
+      });
+    },
+    getOrganDic(row, column, cellValue, index) {
+      const result = this.organDic.filter(item => cellValue === item.key);
+      if (result.length > 0) {
+        return result[0].text;
+      }
+      return '';
+    },
   },
   mounted() {
     this.getTableData();
+    this.setOrganDic();
     window.onresize = () => {
       this.maxHeight = window.innerHeight - 210;
     };

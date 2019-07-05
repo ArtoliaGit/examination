@@ -20,7 +20,7 @@
             resultMap="userMap">
         select *
         from systemuser
-        where username = #{username}
+        where username = #{username} and status = '1';
     </select>
 
     <insert id="save" parameterType="User"
@@ -48,4 +48,13 @@
             </if>
         </where>
     </select>
+    <insert id="saveRoles">
+        insert user_roles(user_id, role_id)
+        <foreach collection="roles" item="item" index="index" separator="union all">
+            select #{userId,jdbcType=VARCHAR}, #{item.roleId,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+    <delete id="deleteRoles">
+        delete from user_roles where user_id = #{userId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

@@ -4,6 +4,8 @@ import com.bsoft.examination.domain.system.ReserveSetting;
 import com.bsoft.examination.service.system.ReserveSettingService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 /**
  * 预约设置
  * @author artolia
@@ -25,6 +27,7 @@ public class ReserveSettingController {
      */
     @PostMapping("/save")
     public String save(@RequestBody ReserveSetting reserveSetting) {
+        reserveSetting.setCreateTime(new Date());
         return reserveSettingService.saveOrUpdate(reserveSetting).toJson();
     }
 

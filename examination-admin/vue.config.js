@@ -61,6 +61,15 @@ module.exports = {
         },
         logLevel: 'debug',
       },
+      '/api/websocket': {
+        target: 'ws://127.0.0.1:9090',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/api': '',
+        },
+        logLevel: 'debug',
+      },
     },
     before: () => {},
   },

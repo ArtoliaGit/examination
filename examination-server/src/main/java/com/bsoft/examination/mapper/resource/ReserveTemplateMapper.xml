@@ -17,7 +17,7 @@
                a.check_item,
                a.total_limit,
                a.time_slot,
-               dateadd(day, b.days, getdate()) as reserve_date,
+               convert(datetime,convert(varchar(10),dateadd(day, b.days, getdate()),120)) as reserve_date,
                a.total_limit as available_limit
         from ReserveTemplate a left join CheckItem b on a.check_item = b.code
         where a.status = '1' and b.status = '1' and a.init_flag = '1'

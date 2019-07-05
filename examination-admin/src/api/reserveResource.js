@@ -29,3 +29,9 @@ export const batchSave = data => axios.request({
   data,
   method: 'post',
 });
+
+export const getResourceByConditions = params => axios.request({
+  url: '/reserveResource/getResourceByConditions',
+  params,
+  method: 'get',
+});

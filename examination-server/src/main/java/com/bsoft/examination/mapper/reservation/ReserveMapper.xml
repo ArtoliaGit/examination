@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bsoft.examination.mapper.resource.CheckItemMapper">
+<mapper namespace="com.bsoft.examination.mapper.reservation.ReserveMapper">
 
-    <select id="getDays" parameterType="string"
-            resultType="int">
-        select days from CheckItem
-        where code = #{code,jdbcType=VARCHAR}
-          and status = '1'
+    <select id="getReservePersonInfo" resultType="map">
+        select *
+        from VI_YJJCYYQDJH
+        <where>
+            <if test='applyNo != null and applyNo != ""'>
+                <choose>
+                    <when test='type == "1"'>
+                        and SQDH = #{applyNo}
+                    </when>
+                    <when test='type == "2"'>
+                        and MZHM = #{applyNo} and MZBZ = '门诊'
+                    </when>
+                    <when test='type == "3"'>
+                        and MZHM = #{applyNo} and MZBZ = '住院'
+                    </when>
+                </choose>
+            </if>
+        </where>
     </select>
+    <select id="getMaxId" resultType="java.lang.String">
+        select max(id) from reserve where id like #{date} + '%'
+    </select>
+    <update id="updateStatus">
+        update reserve set status = '1' where id = #{id}
+    </update>
 </mapper>

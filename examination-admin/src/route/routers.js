@@ -28,6 +28,15 @@ export default [
     component: () => import(/* webpackChunkName: "login" */ '@/views/login'),
   },
   {
+    path: '/information',
+    name: 'Information',
+    meta: {
+      title: '叫号显示',
+      hideInMenu: true,
+    },
+    component: () => import(/* webpackChunkName: "information" */ '@/views/information'),
+  },
+  {
     path: '/',
     name: '_home',
     redirect: '/home',
@@ -69,6 +78,16 @@ export default [
           title: '医技预约',
         },
         component: () => import(/* webpackChunkName: "reservation" */ '@/views/reservation'),
+      },
+      {
+        path: 'checkIn',
+        name: 'CheckIn',
+        meta: {
+          access: [config.super_role],
+          icon: 'iconfont icon-tijianyuyuedengji',
+          title: '排队叫号',
+        },
+        component: () => import(/* webpackChunkName: "checkIn" */ '@/views/checkIn'),
       },
     ],
   },

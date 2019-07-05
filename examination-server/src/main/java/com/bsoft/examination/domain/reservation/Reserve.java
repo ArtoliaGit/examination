@@ -1,5 +1,7 @@
 package com.bsoft.examination.domain.reservation;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -17,12 +19,23 @@ public class Reserve {
     /**
      * 主键
      */
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
 
     /**
      * 预约日期
      */
     private String reserveDate;
+
+    /**
+     * 开始时间
+     */
+    private String startTime;
+
+    /**
+     * 结束时间
+     */
+    private String endTime;
 
     /**
      * 预约时段
@@ -45,6 +58,11 @@ public class Reserve {
     private String applyNo;
 
     /**
+     * 门诊号、住院号
+     */
+    private String mzhm;
+
+    /**
      * 姓名
      */
     private String personName;
@@ -60,9 +78,19 @@ public class Reserve {
     private Date birthday;
 
     /**
+     * 年龄
+     */
+    private Integer age;
+
+    /**
      * 预约项目编号
      */
     private String checkItem;
+
+    /**
+     * 项目名称
+     */
+    private String checkItemName;
 
     /**
      * 归属执行科室

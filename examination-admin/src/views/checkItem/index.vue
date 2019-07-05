@@ -219,12 +219,14 @@ export default {
         dept: [{ required: true, message: '不能为空', trigger: 'blur' }],
         address: [{ required: true, message: '不能为空', trigger: 'blur' }],
         status: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        medicalOrder: [{ required: true, message: '不能为空', trigger: 'blur' }],
       },
       statusDic: [
         { key: '1', text: '正常' },
         { key: '0', text: '作废' },
       ],
       genderDic: [
+        { key: '3', text: '全部' },
         { key: '1', text: '男' },
         { key: '2', text: '女' },
       ],
@@ -310,6 +312,8 @@ export default {
     handleSave() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.form.createUser = this.$store.state.user.userName;
+          this.form.createUnit = this.$store.state.user.organ;
           save(this.form).then((res) => {
             if (res.code === 200) {
               this.$message({
@@ -334,7 +338,7 @@ export default {
       });
     },
     handleDelete(val) {
-      remove(val).then((res) => {
+      remove({ id: val.code }).then((res) => {
         if (res.code === 200) {
           this.$message({
             type: 'success',

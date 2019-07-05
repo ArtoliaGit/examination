@@ -12,6 +12,7 @@ import com.bsoft.examination.util.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class RoleService {
      */
     public Result save(Role role, String op) {
         Result<Role> result = new Result<>();
-
+        role.setCreateTime(new Date());
         try {
             if ("create".equals(op)) {
                 QueryWrapper<Role> query = new QueryWrapper<>();
@@ -131,7 +132,13 @@ public class RoleService {
         Result result = new Result();
 
         try {
-            roleMapper.deleteById(roleId);
+            Role role = new Role();
+            role.setRoleId(roleId);
+            role.setStatus("0");
+            role.setCreateTime(new Date());
+            role.setCreateUser(userInfo.getUsername());
+            role.setCreateUnit(userInfo.getOrgan());
+            roleMapper.updateById(role);
             result.setCode(HttpStatus.OK);
             result.setMessage("删除成功");
         } catch (Exception e) {

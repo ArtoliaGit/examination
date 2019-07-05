@@ -33,6 +33,11 @@ public class Role {
     private String roleDescription;
 
     /**
+     * 用户状态 1:正常 0:作废
+     */
+    private String status;
+
+    /**
      * 维护时间
      */
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

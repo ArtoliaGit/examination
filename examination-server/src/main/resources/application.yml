@@ -1,6 +1,9 @@
 server:
   tomcat:
     max-threads: 300
+  servlet:
+    session:
+      timeout: 3600
 
 spring:
   profiles:

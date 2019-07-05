@@ -29,6 +29,13 @@ export default {
       isActive: '',
     };
   },
+  watch: {
+    dateList(val) {
+      if (val.length === 0) {
+        this.isActive = '';
+      }
+    },
+  },
   methods: {
     handleClick(item) {
       this.isActive = item.date;

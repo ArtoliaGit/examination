@@ -18,3 +18,9 @@ export const deleteUser = params => axios.request({
   params,
   method: 'get',
 });
+
+export const updatePassword = data => axios.request({
+  url: '/user/updatePassword',
+  data,
+  method: 'post',
+});

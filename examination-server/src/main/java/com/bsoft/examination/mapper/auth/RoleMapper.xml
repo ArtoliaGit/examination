@@ -21,7 +21,7 @@
     </select>
 
     <select id="getRolesByUser" parameterType="string" resultMap="roleMap">
-        select a.* from role a, user_roles b where a.role_id = b.role_id and b.user_id = #{user_id}
+        select a.* from role a, user_roles b where a.role_id = b.role_id and b.user_id = #{user_id} and a.status = '1'
     </select>
 
     <select id="getRoleList" resultMap="roleMap">
@@ -33,9 +33,9 @@
     </delete>
 
     <insert id="saveResource" parameterType="Role">
-        insert into role_resource(role_id, resource_path) values 
-        <foreach collection="resource" item="item" index="index" separator=",">
-            (#{roleId}, #{item})
+        insert into role_resource(role_id, resource_path)
+        <foreach collection="resource" item="item" index="index" separator="union all">
+            select #{roleId,jdbcType=VARCHAR}, #{item,jdbcType=VARCHAR}
         </foreach>
     </insert>
 </mapper>

@@ -71,4 +71,14 @@ public class ReserveResourceController {
     public String batchSave(@RequestBody List<ReserveResource> resources) {
         return reserveResourceService.batchSave(resources).toJson();
     }
+
+    /**
+     * 根据条件获取预约资源
+     * @param request 请求
+     * @return String
+     */
+    @GetMapping("/getResourceByConditions")
+    public String getResourceByConditions(HttpServletRequest request) {
+        return reserveResourceService.getResourceByConditions(RequestParamPaser.getParameters(request)).toJson();
+    }
 }

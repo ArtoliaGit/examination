@@ -35,7 +35,7 @@
           style="margin-left: 10px;"
           @click="handleInit"
         >
-          初始化
+          生成预约资源
         </el-button>
       </el-row>
       <el-row>
@@ -49,6 +49,7 @@
           header-row-class-name="table-header"
           v-loading="tableLoading"
           size="small"
+          stripe
         >
           <el-table-column label="预约时段" prop="timeSlot" :formatter="getReserveTimeDic" />
           <el-table-column label="周一" prop="monday">
@@ -110,7 +111,7 @@ export default {
         checkItem: '',
       },
       tableLoading: false,
-      maxHeight: window.innerHeight - 210,
+      maxHeight: window.innerHeight - 170,
       checkItemDic: [],
       reserveTimeDic: [],
       weekDic: ['', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
@@ -169,13 +170,28 @@ export default {
         if (res.code === 200) {
           this.$message({
             type: 'success',
-            message: '初始化成功',
+            message: '生成预约资源成功',
+          });
+        } else if (res.code === 204) {
+          this.$message({
+            type: 'success',
+            message: '预约资源已生成',
+          });
+        } else {
+          this.$message({
+            type: 'error',
+            message: '生成预约资源失败',
           });
         }
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '生成预约资源失败',
+        });
       });
     },
     setCheckItemDic() {
-      getCheckItemList().then((res) => {
+      getCheckItemList({ status: '1' }).then((res) => {
         if (res.code === 200) {
           const { data } = res;
           if (data.length > 0) {
@@ -215,7 +231,7 @@ export default {
     this.setCheckItemDic();
     this.setReserveTimeDic();
     window.onresize = () => {
-      this.maxHeight = window.innerHeight - 210;
+      this.maxHeight = window.innerHeight - 170;
     };
   },
 };

@@ -77,12 +77,14 @@ class HttpRequest {
         };
       }
       if (errorInfo.status === 500 || errorInfo.status === 504 || errorInfo.status === 404) {
+        Message.closeAll();
         Message({
           type: 'error',
           message: '服务错误',
         });
       } else if (errorInfo.status === 403) {
         if (router.currentRoute.path !== '/login') {
+          Message.closeAll();
           Message({
             type: 'error',
             message: '请重新登录',

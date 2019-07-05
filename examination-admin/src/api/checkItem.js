@@ -23,3 +23,9 @@ export const getAllList = params => axios.request({
   params,
   method: 'get',
 });
+
+export const getCheckItemByConditions = params => axios.request({
+  url: '/checkItem/getCheckItemByConditions',
+  params,
+  method: 'get',
+});

@@ -23,3 +23,9 @@ export const getAllList = () => axios.request({
   url: '/organ/getAllList',
   method: 'get',
 });
+
+export const getOrganByConditions = params => axios.request({
+  url: '/organ/getOrganByConditions',
+  method: 'get',
+  params,
+});

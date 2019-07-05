@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ public class OrganService extends BaseService<Organ, OrganMapper> {
         Result<Organ> result = new Result<>();
 
         try {
+            organ.setCreateTime(new Date());
             if ("update".equals(op)) {
                 removeDataSource(organ);
                 boolean flag = addDataSource(organ);
